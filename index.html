@@ -97,6 +97,11 @@ body{padding-bottom:62px}
  #chips{display:none}
  #bnav{display:none}body{padding-bottom:0}
 }
+.stt{background:#fff7e0;border:1px solid #f0d58a;border-radius:8px;padding:6px 10px;font-size:13px;margin:8px 0}.stt.rj{background:#fde8e8;border-color:#f0a8a8;color:#7f1d1d}body.dark .stt{background:#3a2f12;color:#f5e3a6}body.dark .stt.rj{background:#3b1717;color:#fbb}
+.post.pend .cm,.post.pend [data-l],.post.pend [data-r],.post.pend .crow{display:none}
+.mn{margin-inline-start:auto;position:relative}.kb{font-size:22px;line-height:1;padding:2px 10px}
+.mm{position:absolute;inset-inline-end:0;top:100%;background:var(--card);border:1px solid var(--l);border-radius:10px;box-shadow:0 4px 14px #0003;z-index:4;min-width:160px;overflow:hidden}
+.mm button{display:block;width:100%;text-align:start;background:none;border:0;font:inherit;padding:10px 14px;cursor:pointer;color:var(--t)}.mm button:hover{background:var(--l)}
 </style>
 </head>
 <body>
@@ -123,7 +128,7 @@ body{padding-bottom:62px}
   <textarea id="tx" placeholder="اكتب حاجة لأهل الأقصر..." maxlength="1500"></textarea>
   <div class="row"><select id="cat" style="width:auto"></select><input type="file" id="img" accept="image/*,video/mp4,video/webm,video/quicktime" style="width:auto;flex:1"><button class="btn" id="pub">نشر</button></div>
  </div>
- <div class="up" id="uphint">صورة أو فيديو قصير (ريل): بحد أقصى 60 ثانية و15 ميجا.</div>
+ <div class="up" id="uphint">كل منشور وريل بيتراجع من الإدارة قبل ما يظهر للناس، والمنشورات السياسية أو الحساسة بتترفض. صورة أو فيديو قصير: بحد أقصى 60 ثانية و15 ميجا.</div>
  <div class="chips" id="chips"></div><div class="reelbar" id="reelbar" hidden>🎬 ريلز · فيديوهات قصيرة من أهل الأقصر</div>
  <div class="card filters"><select id="fa"><option value="">كل المناطق</option></select><button class="ghost" id="rf">تحديث</button></div>
  <div id="feed"></div>
@@ -142,13 +147,14 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ago=t=>{const m=Math.floor((Date.now()-new Date(t))/60000);if(m<1)return'الآن';if(m<60)return'من '+m+' دقيقة';const h=Math.floor(m/60);if(h<24)return'من '+h+' ساعة';return'من '+Math.floor(h/24)+' يوم'};
 Object.entries(AREA_GROUPS).forEach(([g,l])=>{for(const id of ['ar','fa']){const og=document.createElement('optgroup');og.label=g;l.forEach(a=>og.appendChild(new Option(a,a)));$(id).appendChild(og)}});
+const REASONS=['محتوى سياسي','محتوى حساس أو غير مناسب','إساءة أو سب','إعلان مخالف أو مضلل','سبام أو تكرار','معلومات كاذبة','سبب آخر'];
 const CATS=['عام','وظائف','خدمات','فعاليات','أخبار','بيع وشراء','أسئلة'];
-let fg='',view='home',cf='',me=null,prof=null,posts=[],signup=false,busy=false;
+let blk=new Map(),hid=new Set(),sav=new Set(),pcb=null,fg='',view='home',cf='',me=null,prof=null,posts=[],signup=false,busy=false;
 CATS.forEach(c=>$('cat').add(new Option(c,c)));
 const ICONS={'الكل':'🏠','عام':'💬','وظائف':'💼','خدمات':'🛠️','فعاليات':'🎉','أخبار':'📰','بيع وشراء':'🛒','أسئلة':'❓'};
 function menu(){
  const it=(k,ic,lb,on)=>`<button class="${on?'on':''}" ${k}><span class="ic">${ic}</span>${lb}</button>`;
- $('side').innerHTML='<h4>الأقسام</h4>'+it('data-v="home" data-cf=""','🏠','الرئيسية',view==='home'&&!cf)+it('data-v="reels"','🎬','ريلز',view==='reels')+['عام','وظائف','خدمات','فعاليات','أخبار','بيع وشراء','أسئلة'].map(c=>it(`data-v="home" data-cf="${c}"`,ICONS[c],c,view==='home'&&cf===c)).join('')+'<h4>المنصة</h4><button onclick="location.href=\'terms.html\'"><span class="ic">📜</span>الشروط والقواعد</button>';
+ $('side').innerHTML='<h4>الأقسام</h4>'+it('data-v="home" data-cf=""','🏠','الرئيسية',view==='home'&&!cf)+it('data-v="reels"','🎬','ريلز',view==='reels')+it('data-v="saved"','🔖','المحفوظات',view==='saved')+['عام','وظائف','خدمات','فعاليات','أخبار','بيع وشراء','أسئلة'].map(c=>it(`data-v="home" data-cf="${c}"`,ICONS[c],c,view==='home'&&cf===c)).join('')+'<h4>المنصة</h4><button onclick="location.href=\'terms.html\'"><span class="ic">📜</span>الشروط والقواعد</button>';
  $('bnav').innerHTML=[['home','🏠','الرئيسية'],['reels','🎬','ريلز'],['post','➕','نشر'],['nt2','🔔','إشعارات'],['me2','👤','حسابي']].map(([k,ic,lb])=>`<button data-n="${k}" class="${(k==='home'&&view==='home')||(k==='reels'&&view==='reels')?'on':''}"><span>${ic}</span>${lb}</button>`).join('');
  $('stories').innerHTML=Object.keys(AREA_GROUPS).map(g=>`<button class="story ${fg===g?'on':''}" data-g="${g}"><i>${g[0]}</i>${g}</button>`).join('');
  $('reelbar').hidden=view!=='reels';$('feed').className=view==='reels'?'reels':'';
@@ -192,26 +198,33 @@ async function init(){
  if(me){const r=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle();prof=r.data}
  else prof=null;
  $('auth').hidden=!!prof;$('app').hidden=!prof;$('bnav').hidden=!prof;$('side').style.visibility=prof?'visible':'hidden';$('me').hidden=!prof;$('adm').hidden=!(prof&&prof.is_admin);
- if(prof){$('me').textContent=prof.name;load();notif()}
+ if(prof){$('me').textContent=prof.name;await loadMine();load();notif()}
 }
+async function loadMine(){
+ const [b,h,v]=await Promise.all([sb.from('user_blocks').select('target_id,kind'),sb.from('hidden_posts').select('post_id'),sb.from('saved_posts').select('post_id')]);
+ blk=new Map((b.data||[]).map(x=>[x.target_id,x.kind]));hid=new Set((h.data||[]).map(x=>x.post_id));sav=new Set((v.data||[]).map(x=>x.post_id));
+}
+function askReason(cb){pcb=cb;const m=$('modal');m.hidden=false;m.innerHTML='<b>سبب الإبلاغ</b> <button class="ghost" id="cl">إلغاء</button>'+REASONS.map((x,i)=>`<button class="chip" style="display:block;width:100%;margin-top:6px;text-align:start" data-rs="${i}">${x}</button>`).join('')}
+function jump(){const m=/^#p=([0-9a-f-]{36})$/.exec(location.hash);if(!m||jump.done)return;const el=document.getElementById('post-'+m[1]);if(el){jump.done=1;el.scrollIntoView({block:'center'});el.style.outline='3px solid var(--c)'}}
 async function load(){
- const r=await sb.from('posts').select('id,user_id,body,image,video,category,created_at,profiles!posts_user_id_fkey(name,area),likes(user_id),comments(id,user_id,body,created_at,profiles!comments_user_id_fkey(name))').order('created_at',{ascending:false}).limit(60);
+ const r=await sb.from('posts').select('id,user_id,body,image,video,status,reject_reason,category,created_at,profiles!posts_user_id_fkey(name,area),likes(user_id),comments(id,user_id,body,created_at,profiles!comments_user_id_fkey(name))').order('created_at',{ascending:false}).limit(60);
  if(r.error){$('feed').innerHTML='<div class="empty">تعذر التحميل: '+esc(r.error.message)+'</div>';return}
- posts=r.data;render();
+ posts=r.data;render();jump();
 }
 const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(view!=='reels'){v.pause();return}if(e.isIntersecting&&e.intersectionRatio>.6)v.play().catch(()=>{});else v.pause()}),{threshold:[0,.6]});
 function render(){
  const q=$('q').value.trim(),fa=$('fa').value;
- const list=posts.filter(p=>(view!=='reels'||p.video)&&(!cf||p.category===cf)&&(!fa||p.profiles?.area===fa)&&(!fg||AREA_GROUPS[fg].includes(p.profiles?.area))&&(!q||((p.body||'')+(p.profiles?.name||'')).includes(q)));
+ const list=posts.filter(p=>(p.status==='approved'||p.user_id===me.id)&&!blk.has(p.user_id)&&(view==='saved'?sav.has(p.id):!hid.has(p.id))&&(view!=='reels'||p.video)&&(!cf||p.category===cf)&&(!fa||p.profiles?.area===fa)&&(!fg||AREA_GROUPS[fg].includes(p.profiles?.area))&&(!q||((p.body||'')+(p.profiles?.name||'')).includes(q)));
  menu();setTimeout(()=>document.querySelectorAll('#feed video').forEach(v=>io.observe(v)),0);
  $('feed').innerHTML=list.length?list.map(p=>{
   const liked=p.likes.some(l=>l.user_id===me.id),mine=p.user_id===me.id,can=mine||prof.is_admin;
-  const cms=[...p.comments].sort((a,b)=>a.created_at<b.created_at?-1:1);
-  return `<div class="card post"><div class="ph"><div class="av">${esc((p.profiles?.name||'?')[0])}</div><div><b class="nm" data-u="${p.user_id}">${esc(p.profiles?.name)}</b><span class="tag">${esc(p.category||'عام')}</span><small>${esc(p.profiles?.area)} · ${ago(p.created_at)}</small></div></div>
+  const cms=[...p.comments].filter(c=>blk.get(c.user_id)!=='block').sort((a,b)=>a.created_at<b.created_at?-1:1);
+  return `<div id="post-${p.id}" class="card post ${p.status!=='approved'?'pend':''}"><div class="ph"><div class="av">${esc((p.profiles?.name||'?')[0])}</div><div><b class="nm" data-u="${p.user_id}">${esc(p.profiles?.name)}</b><span class="tag">${esc(p.category||'عام')}</span><small>${esc(p.profiles?.area)} · ${ago(p.created_at)}</small></div><div class="mn"><button class="ghost kb" data-m="1" aria-label="خيارات">⋮</button><div class="mm" hidden><button data-sv="${p.id}">${sav.has(p.id)?'🔖 إلغاء الحفظ':'🔖 حفظ المنشور'}</button><button data-cp="${p.id}">🔗 نسخ الرابط</button>${mine?`<button data-e="${p.id}">✏️ تعديل المنشور</button><button data-d="${p.id}">🗑️ حذف المنشور</button>`:`<button data-hd="${p.id}">🙈 إخفاء المنشور</button><button data-mu="${p.user_id}">🔕 كتم ${esc(p.profiles?.name)}</button><button data-bk="${p.user_id}">🚫 حظر ${esc(p.profiles?.name)}</button><button data-r="${p.id}">🚩 إبلاغ</button>${can?`<button data-d="${p.id}">🗑️ حذف (أدمن)</button>`:''}`}</div></div></div>
+  ${p.status==='pending'?'<div class="stt">⏳ قيد المراجعة: مش هيظهر للناس غير بعد موافقة الإدارة</div>':p.status==='rejected'?`<div class="stt rj">❌ المنشور ده اترفض${p.reject_reason?': '+esc(p.reject_reason):''}</div>`:''}
   <p>${esc(p.body)}</p>${p.image?`<img src="${p.image}" alt="">`:''}${p.video?`<video src="${esc(p.video)}" controls playsinline muted loop preload="metadata"></video>`:''}
-  <div class="acts"><button class="ghost ${liked?'on':''}" data-l="${p.id}">${liked?'❤️':'🤍'} ${p.likes.length}</button>${can?`<button class="ghost" data-d="${p.id}">حذف</button>`:''}${mine?'':`<button class="ghost" data-r="${p.id}">إبلاغ</button>`}</div>
-  ${cms.map(c=>`<div class="cm"><b>${esc(c.profiles?.name)}</b> ${esc(c.body)}${(c.user_id===me.id||prof.is_admin)?` <button class="ghost" data-dc="${c.id}">✕</button>`:''}</div>`).join('')}
-  <div class="row"><input placeholder="اكتب تعليق" data-ci="${p.id}" maxlength="400"><button class="btn" data-c="${p.id}">إرسال</button></div></div>`}).join(''):'<div class="empty">مفيش منشورات لسه. كن أول واحد يكتب.</div>';
+  <div class="acts"><button class="ghost ${liked?'on':''}" data-l="${p.id}">${liked?'❤️':'🤍'} ${p.likes.length}</button></div>
+  ${cms.map(c=>`<div class="cm"><b>${esc(c.profiles?.name)}</b> ${esc(c.body)}${(c.user_id===me.id||prof.is_admin)?` <button class="ghost" data-dc="${c.id}">✕</button>`:''}${c.user_id!==me.id?` <button class="ghost" data-rc="${c.id}" title="إبلاغ عن التعليق">🚩</button>`:''}</div>`).join('')}
+  <div class="row crow"><input placeholder="اكتب تعليق" data-ci="${p.id}" maxlength="400"><button class="btn" data-c="${p.id}">إرسال</button></div></div>`}).join(''):'<div class="empty">مفيش منشورات لسه. كن أول واحد يكتب.</div>';
 }
 function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,720/Math.max(i.width,i.height));const c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.6))};i.onerror=()=>res(null);i.src=r.result};r.readAsDataURL(file)})}
 $('pub').onclick=async()=>{
@@ -233,13 +246,22 @@ $('pub').onclick=async()=>{
  const r=await sb.from('posts').insert({user_id:me.id,body:t,image:img,video:vid,category:$('cat').value});
  busy=false;$('pub').textContent='نشر';
  if(r.error)return alert(/RATE_LIMIT/.test(r.error.message)?'وصلت للحد الأقصى للنشر في الساعة، جرب بعد شوية':'تعذر النشر: '+r.error.message);
- $('tx').value='';$('img').value='';load();
+ $('tx').value='';$('img').value='';alert(prof.is_admin?'تم النشر':'منشورك اتبعت للمراجعة وهيظهر للناس بعد موافقة الإدارة. هتلاقي حالته في صفحتك (قيد المراجعة).');load();
 };
 $('q').oninput=render;$('fa').onchange=render;$('rf').onclick=load;
 $('feed').onclick=async e=>{
  if(e.target.tagName==='IMG'){$('viewer').querySelector('img').src=e.target.src;$('viewer').hidden=false;return}
  if(e.target.dataset.u){return showProfile(e.target.dataset.u)}
  const b=e.target.closest('button');if(!b)return;let r;
+ if(b.dataset.m){const mm=b.nextElementSibling,h=mm.hidden;document.querySelectorAll('.mm').forEach(x=>x.hidden=true);mm.hidden=!h;return}
+ if(b.dataset.e){return editPost(b.dataset.e)}
+ if(b.dataset.sv){document.querySelectorAll('.mm').forEach(x=>x.hidden=true);const id=b.dataset.sv;const rr=sav.has(id)?await sb.from('saved_posts').delete().match({user_id:me.id,post_id:id}):await sb.from('saved_posts').insert({user_id:me.id,post_id:id});if(rr.error)return alert('خطأ: '+rr.error.message);sav.has(id)?sav.delete(id):sav.add(id);return render()}
+ if(b.dataset.cp){document.querySelectorAll('.mm').forEach(x=>x.hidden=true);const u=location.origin+location.pathname+'#p='+b.dataset.cp;try{await navigator.clipboard.writeText(u);alert('تم نسخ رابط المنشور')}catch(_){prompt('انسخ الرابط:',u)}return}
+ if(b.dataset.hd){const id=b.dataset.hd;const rr=await sb.from('hidden_posts').insert({user_id:me.id,post_id:id});if(rr.error)return alert('خطأ: '+rr.error.message);hid.add(id);return render()}
+ if(b.dataset.mu||b.dataset.bk){const id=b.dataset.mu||b.dataset.bk,k=b.dataset.mu?'mute':'block';if(!confirm(k==='mute'?'كتم العضو ده؟ مش هتشوف منشوراته (تعليقاته هتفضل ظاهرة). تقدر تلغي الكتم من الخصوصية في صفحتك.':'حظر العضو ده؟ مش هتشوف منشوراته ولا تعليقاته. تقدر تلغي الحظر من الخصوصية في صفحتك.'))return;const rr=await sb.from('user_blocks').upsert({user_id:me.id,target_id:id,kind:k});if(rr.error)return alert('خطأ: '+rr.error.message);blk.set(id,k);return render()}
+ if(b.dataset.r){const id=b.dataset.r;return askReason(async reason=>{const rr=await sb.from('reports').insert({post_id:id,user_id:me.id,reason});$('modal').hidden=true;alert(!rr.error||rr.error.code==='23505'?'تم الإبلاغ، شكراً. الإدارة هتراجعه.':'خطأ: '+rr.error.message)})}
+ if(b.dataset.rc){const id=b.dataset.rc;return askReason(async reason=>{const rr=await sb.from('comment_reports').insert({comment_id:id,user_id:me.id,reason});$('modal').hidden=true;alert(!rr.error||rr.error.code==='23505'?'تم الإبلاغ عن التعليق، شكراً':'خطأ: '+rr.error.message)})}
+ document.querySelectorAll('.mm').forEach(x=>x.hidden=true);
  if(b.dataset.l){const p=posts.find(x=>x.id===b.dataset.l);r=p.likes.some(l=>l.user_id===me.id)?await sb.from('likes').delete().match({post_id:p.id,user_id:me.id}):await sb.from('likes').insert({post_id:p.id,user_id:me.id})}
  else if(b.dataset.d){if(!confirm('حذف المنشور؟'))return;r=await sb.from('posts').delete().eq('id',b.dataset.d)}
  else if(b.dataset.dc){if(!confirm('حذف التعليق؟'))return;r=await sb.from('comments').delete().eq('id',b.dataset.dc)}
@@ -256,8 +278,26 @@ $('adm').onclick=async()=>{
  const ids=Object.keys(g);
  m.innerHTML='<b>البلاغات</b> <button class="ghost" id="cl">إغلاق</button>'+(ids.length?ids.map(id=>`<div class="cm"><b>${esc(g[id].p.profiles?.name)}</b> (${g[id].n} بلاغ): ${esc((g[id].p.body||'[صورة]').slice(0,120))}<div class="row"><button class="btn" data-xd="${id}">حذف المنشور</button><button class="ghost" data-xi="${id}">تجاهل البلاغ</button></div></div>`).join(''):'<div class="empty">مفيش بلاغات</div>');
 };
+async function privacy(){
+ const m=$('modal');m.hidden=false;const ids=[...blk.keys()];
+ const r=ids.length?await sb.from('profiles').select('id,name').in('id',ids):{data:[]};
+ const nm=Object.fromEntries((r.data||[]).map(x=>[x.id,x.name]));
+ m.innerHTML=`<b>الخصوصية</b> <button class="ghost" id="cl">إغلاق</button><p class="up">المحظورين والمكتومين:</p>${ids.length?ids.map(i=>`<div class="cm">${esc(nm[i]||'عضو')} <small>(${blk.get(i)==='mute'?'مكتوم':'محظور'})</small> <button class="ghost" data-ub="${i}">إلغاء</button></div>`).join(''):'<div class="empty">لا يوجد</div>'}<div class="row"><button class="ghost" id="clh">إظهار المنشورات اللي أخفيتها (${hid.size})</button></div>`;
+}
+function editPost(id){
+ const p=posts.find(x=>x.id===id);if(!p)return;const m=$('modal');m.hidden=false;
+ m.innerHTML=`<b>تعديل المنشور</b> <button class="ghost" id="cl">إغلاق</button><div class="row"><textarea id="ebody" maxlength="1500"></textarea></div><div class="row"><select id="ecat">${CATS.map(c=>`<option ${c===p.category?'selected':''}>${c}</option>`).join('')}</select><button class="btn" id="esv" data-id="${id}">حفظ</button></div>${p.status==='approved'?'<div class="up">بعد التعديل المنشور هيرجع للمراجعة ومش هيظهر للناس لحد ما الإدارة توافق.</div>':''}`;
+ $('ebody').value=p.body||'';
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.mn'))document.querySelectorAll('.mm').forEach(x=>x.hidden=true)});
 $('modal').onclick=async e=>{
  const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.rs&&pcb){const f=pcb;pcb=null;return f(REASONS[+b.dataset.rs])}
+ if(b.id==='svw'){view='saved';cf='';$('modal').hidden=true;menu();chips();render();window.scrollTo(0,0);return}
+ if(b.id==='ps')return privacy();
+ if(b.dataset.ub){await sb.from('user_blocks').delete().match({user_id:me.id,target_id:b.dataset.ub});blk.delete(b.dataset.ub);render();return privacy()}
+ if(b.id==='clh'){await sb.from('hidden_posts').delete().eq('user_id',me.id);hid.clear();render();return privacy()}
+ if(b.id==='esv'){const t=$('ebody').value.trim();if(!t&&!posts.find(x=>x.id===b.dataset.id)?.image&&!posts.find(x=>x.id===b.dataset.id)?.video)return alert('اكتب نص');const r=await sb.from('posts').update({body:t,category:$('ecat').value}).eq('id',b.dataset.id);if(r.error)return alert('تعذر الحفظ: '+r.error.message);$('modal').hidden=true;alert('اتحفظ التعديل واتبعت للمراجعة.');load();return}
  if(b.id==='cl'){$('modal').hidden=true;return}
  if(!b.dataset.xd&&!b.dataset.xi)return;
  if(b.dataset.xd){await sb.from('posts').delete().eq('id',b.dataset.xd)}
@@ -269,21 +309,28 @@ async function showProfile(id){
  const [p,c]=await Promise.all([sb.from('profiles').select('name,area,bio,created_at,username').eq('id',id).maybeSingle(),sb.from('posts').select('id',{count:'exact',head:true}).eq('user_id',id)]);
  if(!p.data){m.innerHTML='غير موجود';return}
  const x=p.data,mine=id===me.id;
- m.innerHTML=`<div class="ph"><div class="av">${esc(x.name[0])}</div><div><b>${esc(x.name)}</b><small>${esc(x.area)} · @${esc(x.username)}</small></div></div><p>${esc(x.bio||(mine?'أضف نبذة عنك':'مفيش نبذة'))}</p><small>${c.count||0} منشور · عضو من ${new Date(x.created_at).toLocaleDateString('ar-EG')}</small>${mine?'<div class="row"><input id="bio" maxlength="200" placeholder="نبذة عنك (200 حرف)" value="'+esc(x.bio||'')+'"><button class="btn" id="sbio">حفظ</button></div>':''}<div class="row"><button class="ghost" id="cl">إغلاق</button>${mine?'<button class="ghost" id="lo">تسجيل خروج</button>':''}</div>`;
+ m.innerHTML=`<div class="ph"><div class="av">${esc(x.name[0])}</div><div><b>${esc(x.name)}</b><small>${esc(x.area)} · @${esc(x.username)}</small></div></div><p>${esc(x.bio||(mine?'أضف نبذة عنك':'مفيش نبذة'))}</p><small>${c.count||0} منشور · عضو من ${new Date(x.created_at).toLocaleDateString('ar-EG')}</small>${mine?'<div class="row"><input id="bio" maxlength="200" placeholder="نبذة عنك (200 حرف)" value="'+esc(x.bio||'')+'"><button class="btn" id="sbio">حفظ</button></div>':''}<div class="row"><button class="ghost" id="cl">إغلاق</button>${mine?'<button class="ghost" id="svw">🔖 المحفوظات</button><button class="ghost" id="ps">⚙️ الخصوصية والحظر</button><button class="ghost" id="lo">تسجيل خروج</button>':''}</div>`;
  if(mine)$('lo').onclick=async()=>{await sb.auth.signOut();$('modal').hidden=true;init()};
  if(mine)$('sbio').onclick=async()=>{const r=await sb.from('profiles').update({bio:$('bio').value.trim()}).eq('id',me.id);if(r.error)alert('خطأ: '+r.error.message);else showProfile(id)};
 }
 $('me').onclick=()=>showProfile(me.id);
 $('nt').onclick=async()=>{
  const since=localStorage.seen||'1970-01-01T00:00:00Z';
- const r=await sb.from('comments').select('body,created_at,post_id,profiles!comments_user_id_fkey(name),posts!inner(user_id,body)').eq('posts.user_id',me.id).neq('user_id',me.id).order('created_at',{ascending:false}).limit(15);
+ const [r,pp]=await Promise.all([
+  sb.from('comments').select('body,created_at,post_id,profiles!comments_user_id_fkey(name),posts!inner(user_id,body)').eq('posts.user_id',me.id).neq('user_id',me.id).order('created_at',{ascending:false}).limit(15),
+  sb.from('posts').select('id,body,status,reject_reason,created_at,reviewed_at').eq('user_id',me.id).in('status',['approved','rejected']).not('reviewed_at','is',null).order('reviewed_at',{ascending:false}).limit(15)]);
+ const rv=(pp.data||[]).filter(p=>p.status==='rejected'||new Date(p.reviewed_at)-new Date(p.created_at)>5000).map(p=>({t:p.reviewed_at,h:p.status==='rejected'?`❌ منشورك «${esc((p.body||'').slice(0,30))}» اترفض. السبب: ${esc(p.reject_reason||'غير محدد')}`:`✅ منشورك «${esc((p.body||'').slice(0,30))}» اتنشر`}));
+ const cm=(r.data||[]).map(c=>({t:c.created_at,h:`<b>${esc(c.profiles?.name)}</b> علّق على منشورك «${esc((c.posts.body||'').slice(0,30))}»: ${esc(c.body)}`}));
+ const all=[...rv,...cm].sort((a,b)=>a.t<b.t?1:-1);
  const m=$('modal');m.hidden=false;
- m.innerHTML='<b>إشعارات</b> <button class="ghost" id="cl">إغلاق</button>'+((r.data||[]).length?r.data.map(c=>`<div class="cm"><b>${esc(c.profiles?.name)}</b> علّق على منشورك «${esc((c.posts.body||'').slice(0,30))}»: ${esc(c.body)}${c.created_at>since?' <span class="badge">جديد</span>':''}<br><small>${ago(c.created_at)}</small></div>`).join(''):'<div class="empty">مفيش إشعارات</div>');
+ m.innerHTML='<b>إشعارات</b> <button class="ghost" id="cl">إغلاق</button>'+(all.length?all.map(c=>`<div class="cm">${c.h}${c.t>since?' <span class="badge">جديد</span>':''}<br><small>${ago(c.t)}</small></div>`).join(''):'<div class="empty">مفيش إشعارات</div>');
  localStorage.seen=new Date().toISOString();$('nt').textContent='🔔';
 };
 async function notif(){if(!prof)return;const since=localStorage.seen||'1970-01-01T00:00:00Z';
- const r=await sb.from('comments').select('id,posts!inner(user_id)',{count:'exact',head:true}).eq('posts.user_id',me.id).neq('user_id',me.id).gt('created_at',since);
- $('nt').hidden=false;$('nt').innerHTML='🔔'+(r.count?`<span class="badge">${r.count}</span>`:'')}
+ const [r,pp]=await Promise.all([sb.from('comments').select('id,posts!inner(user_id)',{count:'exact',head:true}).eq('posts.user_id',me.id).neq('user_id',me.id).gt('created_at',since),
+  sb.from('posts').select('status,created_at,reviewed_at').eq('user_id',me.id).gt('reviewed_at',since)]);
+ const n=(r.count||0)+(pp.data||[]).filter(p=>p.status==='rejected'||new Date(p.reviewed_at)-new Date(p.created_at)>5000).length;
+ $('nt').hidden=false;$('nt').innerHTML='🔔'+(n?`<span class="badge">${n}</span>`:'')}
 setInterval(()=>{if(prof&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA')load()},30000);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
 init();
