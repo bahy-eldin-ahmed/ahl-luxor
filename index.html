@@ -362,11 +362,18 @@ async function ntData(){
  const it=(n.data||[]).map(x=>({t:x.created_at,pid:x.post_id,nw:!x.read,id:x.id,h:`<b>${esc(x.profiles?.name||'عضو')}</b> ${(NT[x.kind]||(()=>''))(x)}${x.snippet?` «${esc(x.snippet.slice(0,40))}»`:''}`}));
  return [...rv,...it].sort((a,b)=>a.t<b.t?1:-1);
 }
+const VAPID="BIHzcRP3M0o_g_gj0lpES7o6ui8g931Qg4ieaJWaCnoNBQio6YnOahNfu1ehrhZNVfe5xnChFXVxQ2tX7lEC5ug";
+const u8=b=>{const p='='.repeat((4-b.length%4)%4),r=atob((b+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from([...r].map(c=>c.charCodeAt(0)))};
+async function pushState(){if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window))return 'na';const reg=await navigator.serviceWorker.getRegistration();if(!reg)return 'na';if(Notification.permission==='denied')return 'denied';return (await reg.pushManager.getSubscription())?'on':'off'}
+async function pushBox(){const el=$('pushbox');if(!el)return;const st=await pushState();
+ el.innerHTML=st==='na'?'<small>إشعارات الموبايل: على الآيفون ضيف الموقع للشاشة الرئيسية الأول (مشاركة ← إضافة إلى الشاشة الرئيسية) وبعدين فعّلها من هنا. على أندرويد افتح الموقع من كروم.</small>':st==='denied'?'<small>إشعارات المتصفح متقفلة. افتح إعدادات الموقع في المتصفح واسمح بالإشعارات.</small>':st==='on'?'<small>✅ إشعارات الموبايل شغالة على الجهاز ده</small> <button class="ghost" id="pushoff">إيقاف</button>':'<button class="btn" id="pushon">📲 فعّل إشعارات الموبايل</button>';
+ if($('pushon'))$('pushon').onclick=async()=>{try{const p=await Notification.requestPermission();if(p!=='granted'){pushBox();return}const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(VAPID)});const j=sub.toJSON();await sb.from('push_subscriptions').delete().eq('endpoint',j.endpoint);const r=await sb.from('push_subscriptions').insert({endpoint:j.endpoint,user_id:me.id,p256dh:j.keys.p256dh,auth:j.keys.auth});if(r.error)alert('خطأ: '+r.error.message)}catch(e){alert('تعذر التفعيل: '+e.message)}pushBox()};
+ if($('pushoff'))$('pushoff').onclick=async()=>{const reg=await navigator.serviceWorker.getRegistration();const sub=await reg.pushManager.getSubscription();if(sub){await sb.from('push_subscriptions').delete().eq('endpoint',sub.endpoint);await sub.unsubscribe()}pushBox()}}
 $('nt').onclick=async()=>{
  const all=await ntData();
  const m=$('modal');m.hidden=false;
- m.innerHTML='<b>إشعارات</b> <button class="ghost" id="cl">إغلاق</button>'+(all.length?all.map(c=>`<div class="cm nti" ${c.pid?`data-np="${c.pid}"`:''}>${c.h}${c.nw?' <span class="badge">جديد</span>':''}<br><small>${ago(c.t)}</small></div>`).join(''):'<div class="empty">مفيش إشعارات</div>');
- localStorage.seen=new Date().toISOString();$('nt').textContent='🔔';
+ m.innerHTML='<b>إشعارات</b> <button class="ghost" id="cl">إغلاق</button><div id="pushbox" class="rpn"></div>'+(all.length?all.map(c=>`<div class="cm nti" ${c.pid?`data-np="${c.pid}"`:''}>${c.h}${c.nw?' <span class="badge">جديد</span>':''}<br><small>${ago(c.t)}</small></div>`).join(''):'<div class="empty">مفيش إشعارات</div>');
+ pushBox();localStorage.seen=new Date().toISOString();$('nt').textContent='🔔';
  sb.from('notifications').update({read:true}).eq('user_id',me.id).eq('read',false).then(()=>{});
  m.onclick=e=>{const d=e.target.closest('[data-np]');if(!d)return;m.hidden=true;view='home';cf='';location.hash='#p='+d.dataset.np;jump.done=0;chips();menu();render();jump()};
 };
