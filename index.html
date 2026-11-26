@@ -63,11 +63,12 @@ textarea{min-height:80px;resize:vertical}
 <script>
 const SB_URL="https://mvbogyzncrxulagneyvl.supabase.co",SB_KEY="sb_publishable_6NG5NuXODNDNHxaN0cuE8A_5ScGBHno",DOM="@luxor-users.com";
 const sb=supabase.createClient(SB_URL,SB_KEY);
-const AREAS=["مدينة الأقصر","الكرنك","البر الغربي","القرنة","الطود","أرمنت","إسنا","الزينية","البياضية","القرى والنجوع"];
+const AREA_GROUPS={"مدينة الأقصر": ["مدينة الأقصر", "الكرنك", "العوامية", "منشأة العماري", "البر الغربي"], "البياضية": ["البياضية", "البغدادي", "الحبيل", "الروافعة الغربية"], "الطود": ["الطود", "العديسات (العدايسة)", "منشية النوبة"], "طيبة والزينية": ["طيبة الجديدة", "الزينية", "الصعايدة", "العشي", "المدامود"], "القرنة": ["القرنة", "البعيرات", "الأقالتة", "الشيخ عامر", "الضبعية", "قامولا", "المريس", "الملاحية"], "أرمنت": ["أرمنت", "الدمقراط", "الرزيقات", "الريانية", "المحاميد"], "إسنا": ["إسنا", "أصفون", "الحلة", "الحميدات", "الدبابية", "الدير", "الشغب", "العضايمة", "الغريرة", "القرايا", "الكلابية", "المساوية", "المعلة", "النجوع", "النمسا", "الهنادي", "الوسطى", "جزيرة راجح", "زرنيخ", "طفنيس", "كومير", "كيمان المطاعنة", "وبورات المطاعنة"], "غير ذلك": ["أخرى"]};
+const AREAS=Object.values(AREA_GROUPS).flat();
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ago=t=>{const m=Math.floor((Date.now()-new Date(t))/60000);if(m<1)return'الآن';if(m<60)return'من '+m+' دقيقة';const h=Math.floor(m/60);if(h<24)return'من '+h+' ساعة';return'من '+Math.floor(h/24)+' يوم'};
-AREAS.forEach(a=>{$('ar').add(new Option(a,a));$('fa').add(new Option(a,a))});
+Object.entries(AREA_GROUPS).forEach(([g,l])=>{for(const id of ['ar','fa']){const og=document.createElement('optgroup');og.label=g;l.forEach(a=>og.appendChild(new Option(a,a)));$(id).appendChild(og)}});
 let me=null,prof=null,posts=[],signup=false,busy=false;
 $('sw').onclick=()=>{signup=!signup;$('su').hidden=!signup;$('at').textContent=signup?'حساب جديد':'دخول';$('go').textContent=signup?'إنشاء الحساب':'دخول';$('sw').textContent=signup?'عندي حساب، دخول':'معنديش حساب، سجّل جديد';$('er').textContent=''};
 const fail=m=>{$('er').textContent=m};
