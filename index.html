@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>أهل الأقصر</title>
+<meta name="theme-color" content="#b45309">
+<style>
+:root{--c:#b45309;--c2:#92400e;--bg:#f5efe6;--card:#fff;--t:#2b2118;--m:#7a6a5a;--l:#e8dccb}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--t)}
+header{background:var(--c);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;justify-content:space-between}
+header h1{margin:0;font-size:20px}
+header button{background:#fff2;color:#fff;border:0;border-radius:20px;padding:6px 12px;cursor:pointer}
+main{max-width:640px;margin:0 auto;padding:12px}
+.card{background:var(--card);border-radius:12px;padding:12px;margin-bottom:12px;box-shadow:0 1px 3px #0001}
+.note{background:#fff7e0;border:1px solid #f0d58a;font-size:13px;line-height:1.7}
+textarea,input,select{width:100%;font:inherit;padding:9px;border:1px solid var(--l);border-radius:8px;background:#fff;color:var(--t)}
+textarea{min-height:80px;resize:vertical}
+.row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.btn{background:var(--c);color:#fff;border:0;border-radius:8px;padding:9px 16px;font:inherit;cursor:pointer}
+.btn:hover{background:var(--c2)}
+.ghost{background:none;border:0;color:var(--m);cursor:pointer;font:inherit;padding:6px 8px}
+.ghost.on{color:#c0262d;font-weight:bold}
+.av{width:38px;height:38px;border-radius:50%;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;flex:none}
+.ph{display:flex;gap:10px;align-items:center}
+.ph small{color:var(--m);display:block}
+.post p{white-space:pre-wrap;line-height:1.8;margin:10px 0}
+.post img{max-width:100%;border-radius:8px}
+.acts{display:flex;gap:4px;border-top:1px solid var(--l);margin-top:8px;padding-top:4px}
+.cm{background:#faf5ec;border-radius:10px;padding:6px 10px;margin-top:6px;font-size:14px}
+.cm b{font-size:13px}
+.filters{display:flex;gap:8px}
+.empty{text-align:center;color:var(--m);padding:30px}
+</style>
+</head>
+<body>
+<header><h1>🏛️ أهل الأقصر</h1><div><button id="me"></button></div></header>
+<main>
+<div class="card note">منصة لشباب وأهل الأقصر: اكتب، علّق، واعمل لايك. <b>النسخة التجريبية:</b> المنشورات محفوظة على جهازك فقط لحد ما يتفعّل الخادم المشترك.</div>
+<div id="setup" class="card" hidden>
+ <h3 style="margin-top:0">أهلاً بيك، عرّفنا بنفسك</h3>
+ <input id="nm" placeholder="الاسم" maxlength="40">
+ <div class="row"><select id="ar"></select></div>
+ <div class="row"><button class="btn" id="go">ابدأ</button></div>
+</div>
+<div id="app" hidden>
+ <div class="card">
+  <textarea id="tx" placeholder="اكتب حاجة لأهل الأقصر..." maxlength="1500"></textarea>
+  <div class="row"><input type="file" id="img" accept="image/*" style="width:auto;flex:1"><button class="btn" id="pub">نشر</button></div>
+ </div>
+ <div class="card filters"><input id="q" placeholder="بحث"><select id="fa"><option value="">كل المناطق</option></select></div>
+ <div id="feed"></div>
+</div>
+</main>
+<script>
+const AREAS=["مدينة الأقصر","الكرنك","البر الغربي","القرنة","الطود","أرمنت","إسنا","الزينية","البياضية","القرى والنجوع"];
+// طبقة التخزين: تتبدل بخادم مشترك لاحقاً بدون تغيير باقي التطبيق
+const DB={
+ get(k,d){try{return JSON.parse(localStorage.getItem('luxor_'+k))??d}catch(e){return d}},
+ set(k,v){localStorage.setItem('luxor_'+k,JSON.stringify(v))}
+};
+let user=DB.get('user',null),posts=DB.get('posts',[]);
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const ago=t=>{const m=Math.floor((Date.now()-t)/60000);if(m<1)return'الآن';if(m<60)return'من '+m+' دقيقة';const h=Math.floor(m/60);if(h<24)return'من '+h+' ساعة';return'من '+Math.floor(h/24)+' يوم'};
+const save=()=>DB.set('posts',posts);
+AREAS.forEach(a=>{$('ar').add(new Option(a,a));$('fa').add(new Option(a,a))});
+function show(){
+ $('setup').hidden=!!user;$('app').hidden=!user;
+ $('me').textContent=user?user.name+' ('+user.area+')':'';$('me').hidden=!user;
+ if(user)render();
+}
+$('go').onclick=()=>{const n=$('nm').value.trim();if(!n)return alert('اكتب اسمك');user={id:uid(),name:n,area:$('ar').value};DB.set('user',user);show()};
+$('me').onclick=()=>{const n=prompt('غيّر اسمك',user.name);if(n&&n.trim()){user.name=n.trim().slice(0,40);DB.set('user',user);posts.forEach(p=>{if(p.uid===user.id)p.name=user.name;p.cm.forEach(c=>{if(c.uid===user.id)c.name=user.name})});save();show()}};
+function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,800/Math.max(i.width,i.height));const c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.7))};i.onerror=()=>res(null);i.src=r.result};r.readAsDataURL(file)})}
+$('pub').onclick=async()=>{
+ const t=$('tx').value.trim();const f=$('img').files[0];
+ if(!t&&!f)return;
+ const img=f?await shrink(f):null;
+ posts.unshift({id:uid(),uid:user.id,name:user.name,area:user.area,t:Date.now(),txt:t,img,likes:[],cm:[]});
+ try{save()}catch(e){posts.shift();return alert('المساحة المحلية امتلأت، جرب من غير صورة')}
+ $('tx').value='';$('img').value='';render();
+};
+$('q').oninput=render;$('fa').onchange=render;
+function render(){
+ const q=$('q').value.trim(),fa=$('fa').value;
+ const list=posts.filter(p=>(!fa||p.area===fa)&&(!q||(p.txt+p.name).includes(q)));
+ $('feed').innerHTML=list.length?list.map(p=>{
+  const liked=p.likes.includes(user.id);
+  return `<div class="card post"><div class="ph"><div class="av">${esc(p.name[0])}</div><div><b>${esc(p.name)}</b><small>${esc(p.area)} · ${ago(p.t)}</small></div></div>
+  <p>${esc(p.txt)}</p>${p.img?`<img src="${p.img}" alt="">`:''}
+  <div class="acts"><button class="ghost ${liked?'on':''}" data-l="${p.id}">${liked?'❤️':'🤍'} ${p.likes.length}</button>${p.uid===user.id?`<button class="ghost" data-d="${p.id}">حذف</button>`:''}</div>
+  ${p.cm.map(c=>`<div class="cm"><b>${esc(c.name)}</b> ${esc(c.txt)}</div>`).join('')}
+  <div class="row"><input placeholder="اكتب تعليق" data-ci="${p.id}" maxlength="400"><button class="btn" data-c="${p.id}">إرسال</button></div></div>`}).join(''):'<div class="empty">مفيش منشورات لسه. كن أول واحد يكتب.</div>';
+}
+$('feed').onclick=e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.l){const p=posts.find(x=>x.id===b.dataset.l);const i=p.likes.indexOf(user.id);i<0?p.likes.push(user.id):p.likes.splice(i,1)}
+ else if(b.dataset.d){if(!confirm('حذف المنشور؟'))return;posts=posts.filter(x=>x.id!==b.dataset.d)}
+ else if(b.dataset.c){const inp=document.querySelector(`[data-ci="${b.dataset.c}"]`);const v=inp.value.trim();if(!v)return;posts.find(x=>x.id===b.dataset.c).cm.push({uid:user.id,name:user.name,txt:v,t:Date.now()})}
+ else return;
+ save();render();
+};
+show();
+</script>
+</body>
+</html>
