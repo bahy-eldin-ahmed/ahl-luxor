@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bahy-eldin-ahmed.github.io/ahl-luxor/sitemap.xml
