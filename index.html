@@ -131,7 +131,7 @@ body{padding-bottom:62px}
   <textarea id="tx" placeholder="اكتب حاجة لأهل الأقصر..." maxlength="1500"></textarea>
   <div class="row"><select id="cat" style="width:auto"></select><input type="file" id="img" accept="image/*,video/mp4,video/webm,video/quicktime" style="width:auto;flex:1"><button class="btn" id="pub">نشر</button></div>
  </div>
- <div class="up" id="uphint">كل منشور وريل بيتراجع من الإدارة قبل ما يظهر للناس، والمنشورات السياسية أو الحساسة بتترفض. صورة أو فيديو قصير: بحد أقصى 60 ثانية و15 ميجا.</div>
+ <div class="up" id="uphint">كل منشور وريل بيتراجع من الإدارة قبل ما يظهر للناس، والمنشورات السياسية أو الحساسة بتترفض. صورة أو فيديو قصير: بحد أقصى 30 ثانية (الفيديو بيتصغر تلقائي قبل الرفع).</div>
  <div class="chips" id="chips"></div><div class="reelbar" id="reelbar" hidden>🎬 ريلز · فيديوهات قصيرة من أهل الأقصر</div>
  <div class="card filters"><select id="fa"><option value="">كل المناطق</option></select><button class="ghost" id="rf">تحديث</button></div>
  <div id="feed"></div>
@@ -230,16 +230,37 @@ function render(){
   ${cms.map(c=>`<div class="cm"><b>${esc(c.profiles?.name)}</b> ${esc(c.body)}${(c.user_id===me.id||prof.is_admin)?` <button class="ghost" data-dc="${c.id}">✕</button>`:''}${c.user_id!==me.id?` <button class="ghost" data-rc="${c.id}" title="إبلاغ عن التعليق">🚩</button>`:''}</div>`).join('')}
   <div class="row crow"><input placeholder="اكتب تعليق" data-ci="${p.id}" maxlength="400"><button class="btn" data-c="${p.id}">إرسال</button></div></div>`}).join(''):'<div class="empty">مفيش منشورات لسه. كن أول واحد يكتب.</div>';
 }
-function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,720/Math.max(i.width,i.height));const c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.6))};i.onerror=()=>res(null);i.src=r.result};r.readAsDataURL(file)})}
+function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{let m=1080,q=.72,out=null;for(let k=0;k<6;k++){const s=Math.min(1,m/Math.max(i.width,i.height));const c=document.createElement('canvas');c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);c.getContext('2d').drawImage(i,0,0,c.width,c.height);out=c.toDataURL('image/jpeg',q);if(out.length*0.75<=300*1024)break;q=Math.max(.45,q-.08);m=Math.round(m*.85)}res(out)};i.onerror=()=>res(null);i.src=r.result};r.readAsDataURL(file)})}
+function squeezeVideo(f,dur,prog){return new Promise((ok,no)=>{
+ const MR=window.MediaRecorder;if(!MR||!HTMLCanvasElement.prototype.captureStream)return ok(f);
+ const types=['video/mp4;codecs=avc1','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];const mt=types.find(t=>MR.isTypeSupported(t));if(!mt)return ok(f);
+ const v=document.createElement('video');v.muted=true;v.playsInline=true;v.src=URL.createObjectURL(f);
+ v.onerror=()=>no(new Error('الفيديو ده مش مدعوم، جرب mp4'));
+ v.onloadedmetadata=async()=>{
+  const sc=Math.min(1,540/Math.min(v.videoWidth,v.videoHeight)||1);const w=Math.round(v.videoWidth*sc/2)*2,h=Math.round(v.videoHeight*sc/2)*2;
+  const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');
+  const st=c.captureStream(30);
+  try{const vs=v.captureStream?v.captureStream():null;if(vs)vs.getAudioTracks().forEach(t=>st.addTrack(t))}catch(e){}
+  let rec;try{rec=new MR(st,{mimeType:mt,videoBitsPerSecond:1100000,audioBitsPerSecond:64000})}catch(e){return ok(f)}
+  const ch=[];rec.ondataavailable=e=>e.data&&e.data.size&&ch.push(e.data);
+  let done=false;const fin=()=>{if(done)return;done=true;try{rec.stop()}catch(e){}};
+  rec.onstop=()=>{const b=new Blob(ch,{type:mt.split(';')[0]});URL.revokeObjectURL(v.src);ok(b.size&&b.size<f.size?b:f)};
+  const draw=()=>{if(done)return;g.drawImage(v,0,0,w,h);prog&&prog(Math.min(99,Math.round(v.currentTime/dur*100)));if(v.ended||v.currentTime>=dur-.05)return fin();requestAnimationFrame(draw)};
+  v.onended=fin;rec.start(1000);
+  try{await v.play()}catch(e){return ok(f)}
+  draw();
+ }})}
 $('pub').onclick=async()=>{
- if(busy)return;const t=$('tx').value.trim(),f=$('img').files[0];if(!t&&!f)return;
+ if(busy)return;let f=$('img').files[0];const t=$('tx').value.trim();if(!t&&!f)return;
  busy=true;$('pub').textContent='...';
  let img=null,vid=null;
  try{
   if(f&&f.type.startsWith('video/')){
-   if(f.size>15*1024*1024)throw new Error('الفيديو أكبر من 15 ميجا');
-   const dur=await new Promise((ok,no)=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>ok(v.duration);v.onerror=()=>no(new Error('الفيديو ده مش مدعوم، جرب mp4'));v.src=URL.createObjectURL(f)});
-   if(dur>61)throw new Error('الفيديو أطول من 60 ثانية');
+      const dur=await new Promise((ok,no)=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>ok(v.duration);v.onerror=()=>no(new Error('الفيديو ده مش مدعوم، جرب mp4'));v.src=URL.createObjectURL(f)});
+   if(dur>31)throw new Error('الفيديو أطول من 30 ثانية');
+   $('pub').textContent='جاري تصغير الفيديو 0%';
+   if(f.size>6*1024*1024||f.type==='video/quicktime')f=await squeezeVideo(f,dur,p=>$('pub').textContent='جاري تصغير الفيديو '+p+'%');
+   if(f.size>15*1024*1024)throw new Error('الفيديو كبير حتى بعد التصغير، جرب فيديو أقصر');
    $('pub').textContent='جاري رفع الفيديو...';
    const ext=f.type==='video/webm'?'webm':f.type==='video/quicktime'?'mov':'mp4',path=me.id+'/'+Date.now()+'.'+ext;
    const up=await sb.storage.from('reels').upload(path,f,{contentType:f.type});
