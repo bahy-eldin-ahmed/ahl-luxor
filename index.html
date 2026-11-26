@@ -102,6 +102,9 @@ body{padding-bottom:62px}
 .mn{margin-inline-start:auto;position:relative}.kb{font-size:22px;line-height:1;padding:2px 10px}
 .mm{position:absolute;inset-inline-end:0;top:100%;background:var(--card);border:1px solid var(--l);border-radius:10px;box-shadow:0 4px 14px #0003;z-index:4;min-width:160px;overflow:hidden}
 .mm button{display:block;width:100%;text-align:start;background:none;border:0;font:inherit;padding:10px 14px;cursor:pointer;color:var(--t)}.mm button:hover{background:var(--l)}
+#ib{position:fixed;inset-inline:10px;bottom:70px;z-index:12;background:var(--card);color:var(--t);border:1px solid var(--c);border-radius:14px;padding:10px 12px;box-shadow:0 6px 20px #0004;display:flex;gap:10px;align-items:center;font-size:14px;line-height:1.6}
+#ib[hidden]{display:none}#ib img{width:42px;height:42px;border-radius:10px;flex:none}#ib .x{margin-inline-start:auto}
+@media(min-width:900px){#ib{bottom:16px;max-width:420px;inset-inline-start:auto}}
 </style>
 </head>
 <body>
@@ -137,6 +140,7 @@ body{padding-bottom:62px}
 <div id="viewer" hidden><img alt=""></div>
 </main></div>
 <nav id="bnav" hidden></nav>
+<div id="ib" hidden><img src="data:image/png;base64,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" alt=""><div id="ibt"></div><button class="btn" id="ibi" hidden>تثبيت</button><button class="ghost x" id="ibx" aria-label="إغلاق">✕</button></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SB_URL="https://mvbogyzncrxulagneyvl.supabase.co",SB_KEY="sb_publishable_6NG5NuXODNDNHxaN0cuE8A_5ScGBHno",DOM="@luxor-users.com";
@@ -332,6 +336,18 @@ async function notif(){if(!prof)return;const since=localStorage.seen||'1970-01-0
  const n=(r.count||0)+(pp.data||[]).filter(p=>p.status==='rejected'||new Date(p.reviewed_at)-new Date(p.created_at)>5000).length;
  $('nt').hidden=false;$('nt').innerHTML='🔔'+(n?`<span class="badge">${n}</span>`:'')}
 setInterval(()=>{if(prof&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA')load()},30000);
+
+(()=>{const ib=$('ib');let dp=null;
+ const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+ if(standalone||sessionStorage.ibx)return;
+ const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;
+ const show=()=>{if(sessionStorage.ibx)return;ib.hidden=false};
+ $('ibx').onclick=()=>{ib.hidden=true;sessionStorage.ibx='1'};
+ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;$('ibt').innerHTML='<b>ثبّت تطبيق أهل الأقصر</b><br>افتحه من الشاشة الرئيسية زي أي تطبيق.';$('ibi').hidden=false;setTimeout(show,2500)});
+ $('ibi').onclick=async()=>{if(!dp)return;dp.prompt();await dp.userChoice;dp=null;ib.hidden=true;sessionStorage.ibx='1'};
+ window.addEventListener('appinstalled',()=>{ib.hidden=true});
+ if(ios){$('ibt').innerHTML='<b>ثبّت التطبيق على الآيفون</b><br>اضغط زر المشاركة <span style="font-size:18px">⬆️</span> ثم «إضافة إلى الشاشة الرئيسية».';setTimeout(show,3000)}
+})();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
 init();
 </script>
