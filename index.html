@@ -30,80 +30,129 @@ textarea{min-height:80px;resize:vertical}
 .acts{display:flex;gap:4px;border-top:1px solid var(--l);margin-top:8px;padding-top:4px}
 .cm{background:#faf5ec;border-radius:10px;padding:6px 10px;margin-top:6px;font-size:14px}
 .cm b{font-size:13px}
-.filters{display:flex;gap:8px}
+.filters{display:flex;gap:8px;align-items:center}
+#modal{position:fixed;inset:60px 12px auto 12px;max-width:600px;margin:auto;max-height:70vh;overflow:auto;z-index:9;box-shadow:0 4px 20px #0004}
 .empty{text-align:center;color:var(--m);padding:30px}
 </style>
 </head>
 <body>
-<header><h1>🏛️ أهل الأقصر</h1><div><button id="me"></button></div></header>
+<header><h1>🏛️ أهل الأقصر</h1><div><button id="adm" hidden>البلاغات</button> <button id="me" hidden></button></div></header>
 <main>
-<div class="card note">منصة لشباب وأهل الأقصر: اكتب، علّق، واعمل لايك. <b>النسخة التجريبية:</b> المنشورات محفوظة على جهازك فقط لحد ما يتفعّل الخادم المشترك.</div>
-<div id="setup" class="card" hidden>
- <h3 style="margin-top:0">أهلاً بيك، عرّفنا بنفسك</h3>
- <input id="nm" placeholder="الاسم" maxlength="40">
- <div class="row"><select id="ar"></select></div>
- <div class="row"><button class="btn" id="go">ابدأ</button></div>
+<div id="auth" class="card" hidden>
+ <h3 style="margin-top:0" id="at">دخول</h3>
+ <input id="un" placeholder="اسم المستخدم (إنجليزي أو أرقام، 3 حروف على الأقل)" maxlength="20" autocapitalize="none" dir="ltr">
+ <div class="row"><input id="pw" type="password" placeholder="الرقم السري (6 خانات على الأقل)" maxlength="40" dir="ltr"></div>
+ <div id="su" hidden>
+  <div class="row"><input id="nm" placeholder="اسمك اللي هيظهر" maxlength="40"></div>
+  <div class="row"><select id="ar"></select></div>
+ </div>
+ <div class="row"><button class="btn" id="go">دخول</button><button class="ghost" id="sw">معنديش حساب، سجّل جديد</button></div>
+ <div id="er" style="color:#c0262d;margin-top:8px"></div>
 </div>
 <div id="app" hidden>
  <div class="card">
   <textarea id="tx" placeholder="اكتب حاجة لأهل الأقصر..." maxlength="1500"></textarea>
   <div class="row"><input type="file" id="img" accept="image/*" style="width:auto;flex:1"><button class="btn" id="pub">نشر</button></div>
  </div>
- <div class="card filters"><input id="q" placeholder="بحث"><select id="fa"><option value="">كل المناطق</option></select></div>
+ <div class="card filters"><input id="q" placeholder="بحث"><select id="fa"><option value="">كل المناطق</option></select><button class="ghost" id="rf">تحديث</button></div>
  <div id="feed"></div>
 </div>
+<div id="modal" class="card" hidden></div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SB_URL="https://mvbogyzncrxulagneyvl.supabase.co",SB_KEY="sb_publishable_6NG5NuXODNDNHxaN0cuE8A_5ScGBHno",DOM="@luxor-users.com";
+const sb=supabase.createClient(SB_URL,SB_KEY);
 const AREAS=["مدينة الأقصر","الكرنك","البر الغربي","القرنة","الطود","أرمنت","إسنا","الزينية","البياضية","القرى والنجوع"];
-// طبقة التخزين: تتبدل بخادم مشترك لاحقاً بدون تغيير باقي التطبيق
-const DB={
- get(k,d){try{return JSON.parse(localStorage.getItem('luxor_'+k))??d}catch(e){return d}},
- set(k,v){localStorage.setItem('luxor_'+k,JSON.stringify(v))}
-};
-let user=DB.get('user',null),posts=DB.get('posts',[]);
 const $=id=>document.getElementById(id);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-const ago=t=>{const m=Math.floor((Date.now()-t)/60000);if(m<1)return'الآن';if(m<60)return'من '+m+' دقيقة';const h=Math.floor(m/60);if(h<24)return'من '+h+' ساعة';return'من '+Math.floor(h/24)+' يوم'};
-const save=()=>DB.set('posts',posts);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ago=t=>{const m=Math.floor((Date.now()-new Date(t))/60000);if(m<1)return'الآن';if(m<60)return'من '+m+' دقيقة';const h=Math.floor(m/60);if(h<24)return'من '+h+' ساعة';return'من '+Math.floor(h/24)+' يوم'};
 AREAS.forEach(a=>{$('ar').add(new Option(a,a));$('fa').add(new Option(a,a))});
-function show(){
- $('setup').hidden=!!user;$('app').hidden=!user;
- $('me').textContent=user?user.name+' ('+user.area+')':'';$('me').hidden=!user;
- if(user)render();
-}
-$('go').onclick=()=>{const n=$('nm').value.trim();if(!n)return alert('اكتب اسمك');user={id:uid(),name:n,area:$('ar').value};DB.set('user',user);show()};
-$('me').onclick=()=>{const n=prompt('غيّر اسمك',user.name);if(n&&n.trim()){user.name=n.trim().slice(0,40);DB.set('user',user);posts.forEach(p=>{if(p.uid===user.id)p.name=user.name;p.cm.forEach(c=>{if(c.uid===user.id)c.name=user.name})});save();show()}};
-function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,800/Math.max(i.width,i.height));const c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.7))};i.onerror=()=>res(null);i.src=r.result};r.readAsDataURL(file)})}
-$('pub').onclick=async()=>{
- const t=$('tx').value.trim();const f=$('img').files[0];
- if(!t&&!f)return;
- const img=f?await shrink(f):null;
- posts.unshift({id:uid(),uid:user.id,name:user.name,area:user.area,t:Date.now(),txt:t,img,likes:[],cm:[]});
- try{save()}catch(e){posts.shift();return alert('المساحة المحلية امتلأت، جرب من غير صورة')}
- $('tx').value='';$('img').value='';render();
+let me=null,prof=null,posts=[],signup=false,busy=false;
+$('sw').onclick=()=>{signup=!signup;$('su').hidden=!signup;$('at').textContent=signup?'حساب جديد':'دخول';$('go').textContent=signup?'إنشاء الحساب':'دخول';$('sw').textContent=signup?'عندي حساب، دخول':'معنديش حساب، سجّل جديد';$('er').textContent=''};
+const fail=m=>{$('er').textContent=m};
+$('go').onclick=async()=>{
+ const u=$('un').value.trim().toLowerCase(),p=$('pw').value;fail('');
+ if(!/^[a-z0-9_]{3,20}$/.test(u))return fail('اسم المستخدم: حروف إنجليزية وأرقام و _ فقط (3 إلى 20)');
+ if(p.length<6)return fail('الرقم السري لازم يكون 6 خانات على الأقل');
+ const email=u+DOM;
+ if(signup){
+  const n=$('nm').value.trim();if(n.length<2)return fail('اكتب اسمك');
+  const r=await sb.auth.signUp({email,password:p});
+  if(r.error)return fail(/already/i.test(r.error.message)?'اسم المستخدم ده مأخوذ':'مشكلة في التسجيل: '+r.error.message);
+  if(!r.data.session){const l=await sb.auth.signInWithPassword({email,password:p});if(l.error)return fail(l.error.message)}
+  const uid=(await sb.auth.getUser()).data.user.id;
+  const pr=await sb.from('profiles').insert({id:uid,username:u,name:n,area:$('ar').value});
+  if(pr.error)return fail('تعذر إنشاء الملف الشخصي: '+pr.error.message);
+ }else{
+  const l=await sb.auth.signInWithPassword({email,password:p});
+  if(l.error)return fail('اسم المستخدم أو الرقم السري غلط');
+ }
+ init();
 };
-$('q').oninput=render;$('fa').onchange=render;
+$('me').onclick=async()=>{if(confirm('تسجيل خروج؟')){await sb.auth.signOut();init()}};
+async function init(){
+ const {data}=await sb.auth.getSession();me=data.session?.user||null;
+ if(me){const r=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle();prof=r.data}
+ else prof=null;
+ $('auth').hidden=!!prof;$('app').hidden=!prof;$('me').hidden=!prof;$('adm').hidden=!(prof&&prof.is_admin);
+ if(prof){$('me').textContent=prof.name+' · خروج';load()}
+}
+async function load(){
+ const r=await sb.from('posts').select('id,user_id,body,image,created_at,profiles!posts_user_id_fkey(name,area),likes(user_id),comments(id,user_id,body,created_at,profiles!comments_user_id_fkey(name))').order('created_at',{ascending:false}).limit(60);
+ if(r.error){$('feed').innerHTML='<div class="empty">تعذر التحميل: '+esc(r.error.message)+'</div>';return}
+ posts=r.data;render();
+}
 function render(){
  const q=$('q').value.trim(),fa=$('fa').value;
- const list=posts.filter(p=>(!fa||p.area===fa)&&(!q||(p.txt+p.name).includes(q)));
+ const list=posts.filter(p=>(!fa||p.profiles?.area===fa)&&(!q||((p.body||'')+(p.profiles?.name||'')).includes(q)));
  $('feed').innerHTML=list.length?list.map(p=>{
-  const liked=p.likes.includes(user.id);
-  return `<div class="card post"><div class="ph"><div class="av">${esc(p.name[0])}</div><div><b>${esc(p.name)}</b><small>${esc(p.area)} · ${ago(p.t)}</small></div></div>
-  <p>${esc(p.txt)}</p>${p.img?`<img src="${p.img}" alt="">`:''}
-  <div class="acts"><button class="ghost ${liked?'on':''}" data-l="${p.id}">${liked?'❤️':'🤍'} ${p.likes.length}</button>${p.uid===user.id?`<button class="ghost" data-d="${p.id}">حذف</button>`:''}</div>
-  ${p.cm.map(c=>`<div class="cm"><b>${esc(c.name)}</b> ${esc(c.txt)}</div>`).join('')}
+  const liked=p.likes.some(l=>l.user_id===me.id),mine=p.user_id===me.id,can=mine||prof.is_admin;
+  const cms=[...p.comments].sort((a,b)=>a.created_at<b.created_at?-1:1);
+  return `<div class="card post"><div class="ph"><div class="av">${esc((p.profiles?.name||'?')[0])}</div><div><b>${esc(p.profiles?.name)}</b><small>${esc(p.profiles?.area)} · ${ago(p.created_at)}</small></div></div>
+  <p>${esc(p.body)}</p>${p.image?`<img src="${p.image}" alt="">`:''}
+  <div class="acts"><button class="ghost ${liked?'on':''}" data-l="${p.id}">${liked?'❤️':'🤍'} ${p.likes.length}</button>${can?`<button class="ghost" data-d="${p.id}">حذف</button>`:''}${mine?'':`<button class="ghost" data-r="${p.id}">إبلاغ</button>`}</div>
+  ${cms.map(c=>`<div class="cm"><b>${esc(c.profiles?.name)}</b> ${esc(c.body)}${(c.user_id===me.id||prof.is_admin)?` <button class="ghost" data-dc="${c.id}">✕</button>`:''}</div>`).join('')}
   <div class="row"><input placeholder="اكتب تعليق" data-ci="${p.id}" maxlength="400"><button class="btn" data-c="${p.id}">إرسال</button></div></div>`}).join(''):'<div class="empty">مفيش منشورات لسه. كن أول واحد يكتب.</div>';
 }
-$('feed').onclick=e=>{
- const b=e.target.closest('button');if(!b)return;
- if(b.dataset.l){const p=posts.find(x=>x.id===b.dataset.l);const i=p.likes.indexOf(user.id);i<0?p.likes.push(user.id):p.likes.splice(i,1)}
- else if(b.dataset.d){if(!confirm('حذف المنشور؟'))return;posts=posts.filter(x=>x.id!==b.dataset.d)}
- else if(b.dataset.c){const inp=document.querySelector(`[data-ci="${b.dataset.c}"]`);const v=inp.value.trim();if(!v)return;posts.find(x=>x.id===b.dataset.c).cm.push({uid:user.id,name:user.name,txt:v,t:Date.now()})}
- else return;
- save();render();
+function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,720/Math.max(i.width,i.height));const c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.6))};i.onerror=()=>res(null);i.src=r.result};r.readAsDataURL(file)})}
+$('pub').onclick=async()=>{
+ if(busy)return;const t=$('tx').value.trim(),f=$('img').files[0];if(!t&&!f)return;
+ busy=true;$('pub').textContent='...';
+ const img=f?await shrink(f):null;
+ const r=await sb.from('posts').insert({user_id:me.id,body:t,image:img});
+ busy=false;$('pub').textContent='نشر';
+ if(r.error)return alert('تعذر النشر: '+r.error.message);
+ $('tx').value='';$('img').value='';load();
 };
-show();
+$('q').oninput=render;$('fa').onchange=render;$('rf').onclick=load;
+$('feed').onclick=async e=>{
+ const b=e.target.closest('button');if(!b)return;let r;
+ if(b.dataset.l){const p=posts.find(x=>x.id===b.dataset.l);r=p.likes.some(l=>l.user_id===me.id)?await sb.from('likes').delete().match({post_id:p.id,user_id:me.id}):await sb.from('likes').insert({post_id:p.id,user_id:me.id})}
+ else if(b.dataset.d){if(!confirm('حذف المنشور؟'))return;r=await sb.from('posts').delete().eq('id',b.dataset.d)}
+ else if(b.dataset.dc){if(!confirm('حذف التعليق؟'))return;r=await sb.from('comments').delete().eq('id',b.dataset.dc)}
+ else if(b.dataset.r){if(!confirm('إبلاغ الإدارة عن المنشور ده؟'))return;r=await sb.from('reports').insert({post_id:b.dataset.r,user_id:me.id});if(!r.error||r.error.code==='23505'){alert('تم الإبلاغ، شكراً');return}}
+ else if(b.dataset.c){const i=document.querySelector(`[data-ci="${b.dataset.c}"]`),v=i.value.trim();if(!v)return;r=await sb.from('comments').insert({post_id:b.dataset.c,user_id:me.id,body:v})}
+ else return;
+ if(r.error)alert('خطأ: '+r.error.message);load();
+};
+$('adm').onclick=async()=>{
+ const m=$('modal');m.hidden=false;m.innerHTML='جاري التحميل...';
+ const r=await sb.from('reports').select('post_id,created_at,posts(id,body,profiles!posts_user_id_fkey(name))').order('created_at',{ascending:false});
+ if(r.error){m.innerHTML='خطأ: '+esc(r.error.message);return}
+ const g={};r.data.forEach(x=>{if(x.posts){(g[x.post_id]=g[x.post_id]||{p:x.posts,n:0}).n++}});
+ const ids=Object.keys(g);
+ m.innerHTML='<b>البلاغات</b> <button class="ghost" id="cl">إغلاق</button>'+(ids.length?ids.map(id=>`<div class="cm"><b>${esc(g[id].p.profiles?.name)}</b> (${g[id].n} بلاغ): ${esc((g[id].p.body||'[صورة]').slice(0,120))}<div class="row"><button class="btn" data-xd="${id}">حذف المنشور</button><button class="ghost" data-xi="${id}">تجاهل البلاغ</button></div></div>`).join(''):'<div class="empty">مفيش بلاغات</div>');
+};
+$('modal').onclick=async e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.id==='cl'){$('modal').hidden=true;return}
+ if(b.dataset.xd){await sb.from('posts').delete().eq('id',b.dataset.xd)}
+ if(b.dataset.xi){await sb.from('reports').delete().eq('post_id',b.dataset.xi)}
+ $('adm').onclick();load();
+};
+setInterval(()=>{if(prof&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA')load()},30000);
+init();
 </script>
 </body>
 </html>
