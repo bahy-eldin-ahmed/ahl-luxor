@@ -351,24 +351,31 @@ async function showProfile(id){
  if(mine)$('sbio').onclick=async()=>{const r=await sb.from('profiles').update({bio:$('bio').value.trim()}).eq('id',me.id);if(r.error)alert('خطأ: '+r.error.message);else showProfile(id)};
 }
 $('me').onclick=()=>showProfile(me.id);
-$('nt').onclick=async()=>{
+const NT={react:(x)=>`${RX[x.reaction]?RX[x.reaction][0]:'👍'} تفاعل على منشورك`,creact:(x)=>`${RX[x.reaction]?RX[x.reaction][0]:'👍'} تفاعل على تعليقك`,comment:()=>'💬 علّق على منشورك',reply:()=>'↩️ رد على تعليقك',follow:()=>'➕ بدأ يتابعك'};
+async function ntData(){
  const since=localStorage.seen||'1970-01-01T00:00:00Z';
- const [r,pp]=await Promise.all([
-  sb.from('comments').select('body,created_at,post_id,profiles!comments_user_id_fkey(name),posts!inner(user_id,body)').eq('posts.user_id',me.id).neq('user_id',me.id).order('created_at',{ascending:false}).limit(15),
+ const [n,pp]=await Promise.all([sb.from('notifications').select('id,kind,post_id,snippet,reaction,read,created_at,profiles!notifications_actor_id_fkey(name)').order('created_at',{ascending:false}).limit(40),
   sb.from('posts').select('id,body,status,reject_reason,created_at,reviewed_at').eq('user_id',me.id).in('status',['approved','rejected']).not('reviewed_at','is',null).order('reviewed_at',{ascending:false}).limit(15)]);
- const rv=(pp.data||[]).filter(p=>p.status==='rejected'||new Date(p.reviewed_at)-new Date(p.created_at)>5000).map(p=>({t:p.reviewed_at,h:p.status==='rejected'?`❌ منشورك «${esc((p.body||'').slice(0,30))}» اترفض. السبب: ${esc(p.reject_reason||'غير محدد')}`:`✅ منشورك «${esc((p.body||'').slice(0,30))}» اتنشر`}));
- const cm=(r.data||[]).map(c=>({t:c.created_at,h:`<b>${esc(c.profiles?.name)}</b> علّق على منشورك «${esc((c.posts.body||'').slice(0,30))}»: ${esc(c.body)}`}));
- const all=[...rv,...cm].sort((a,b)=>a.t<b.t?1:-1);
+ const rv=(pp.data||[]).filter(p=>p.status==='rejected'||new Date(p.reviewed_at)-new Date(p.created_at)>5000).map(p=>({t:p.reviewed_at,pid:p.id,nw:p.reviewed_at>since,h:p.status==='rejected'?`❌ منشورك «${esc((p.body||'').slice(0,30))}» اترفض. السبب: ${esc(p.reject_reason||'غير محدد')}`:`✅ منشورك «${esc((p.body||'').slice(0,30))}» اتنشر`}));
+ const it=(n.data||[]).map(x=>({t:x.created_at,pid:x.post_id,nw:!x.read,id:x.id,h:`<b>${esc(x.profiles?.name||'عضو')}</b> ${(NT[x.kind]||(()=>''))(x)}${x.snippet?` «${esc(x.snippet.slice(0,40))}»`:''}`}));
+ return [...rv,...it].sort((a,b)=>a.t<b.t?1:-1);
+}
+$('nt').onclick=async()=>{
+ const all=await ntData();
  const m=$('modal');m.hidden=false;
- m.innerHTML='<b>إشعارات</b> <button class="ghost" id="cl">إغلاق</button>'+(all.length?all.map(c=>`<div class="cm">${c.h}${c.t>since?' <span class="badge">جديد</span>':''}<br><small>${ago(c.t)}</small></div>`).join(''):'<div class="empty">مفيش إشعارات</div>');
+ m.innerHTML='<b>إشعارات</b> <button class="ghost" id="cl">إغلاق</button>'+(all.length?all.map(c=>`<div class="cm nti" ${c.pid?`data-np="${c.pid}"`:''}>${c.h}${c.nw?' <span class="badge">جديد</span>':''}<br><small>${ago(c.t)}</small></div>`).join(''):'<div class="empty">مفيش إشعارات</div>');
  localStorage.seen=new Date().toISOString();$('nt').textContent='🔔';
+ sb.from('notifications').update({read:true}).eq('user_id',me.id).eq('read',false).then(()=>{});
+ m.onclick=e=>{const d=e.target.closest('[data-np]');if(!d)return;m.hidden=true;view='home';cf='';location.hash='#p='+d.dataset.np;jump.done=0;chips();menu();render();jump()};
 };
 async function notif(){if(!prof)return;const since=localStorage.seen||'1970-01-01T00:00:00Z';
- const [r,pp]=await Promise.all([sb.from('comments').select('id,posts!inner(user_id)',{count:'exact',head:true}).eq('posts.user_id',me.id).neq('user_id',me.id).gt('created_at',since),
+ const [r,pp]=await Promise.all([sb.from('notifications').select('id',{count:'exact',head:true}).eq('read',false),
   sb.from('posts').select('status,created_at,reviewed_at').eq('user_id',me.id).gt('reviewed_at',since)]);
  const n=(r.count||0)+(pp.data||[]).filter(p=>p.status==='rejected'||new Date(p.reviewed_at)-new Date(p.created_at)>5000).length;
- $('nt').hidden=false;$('nt').innerHTML='🔔'+(n?`<span class="badge">${n}</span>`:'')}
-setInterval(()=>{if(prof&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA')load()},30000);
+ $('nt').hidden=false;$('nt').innerHTML='🔔'+(n?`<span class="badge">${n>99?'99+':n}</span>`:'');
+ const bn=document.querySelector('#bnav [data-n="nt2"]');if(bn){bn.querySelector('.badge')?.remove();if(n)bn.insertAdjacentHTML('beforeend',`<span class="badge">${n>99?'99+':n}</span>`)}
+ document.title=(n?`(${n}) `:'')+'أهل الأقصر';}
+setInterval(()=>{if(prof)notif();if(prof&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA')load()},30000);
 
 (()=>{const ib=$('ib');let dp=null;
  const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
