@@ -51,12 +51,51 @@ body.dark .tag{background:#4a3520;color:#f0c890}
 .post img{cursor:zoom-in}
 .nm{cursor:pointer;text-decoration:underline dotted}
 @media(max-width:420px){header h1{font-size:17px}header button{padding:5px 8px;font-size:13px}main{padding:8px}}
+
+.logo{width:34px;height:34px;flex:none}
+.brand{display:flex;align-items:center;gap:8px}
+header{padding:8px 14px}
+header .srch{flex:1;max-width:340px;border-radius:20px;background:#fff3;border:0;color:#fff;padding:8px 14px}
+header .srch::placeholder{color:#ffe9cc}
+.layout{display:grid;grid-template-columns:1fr;max-width:1100px;margin:0 auto}
+#side{display:none}
+.layout main{margin:0;max-width:640px;width:100%;padding:12px;justify-self:center}
+.hero{display:block;width:100%;height:150px;border-radius:12px;margin-bottom:12px}
+.herobox{position:relative}
+.herobox .tt{position:absolute;inset:auto 14px 12px 14px;color:#fff;text-shadow:0 2px 6px #0008}
+.herobox .tt b{font-size:20px;display:block}.herobox .tt span{font-size:13px}
+.stories{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:6px}
+.story{flex:none;width:68px;text-align:center;background:none;border:0;cursor:pointer;color:var(--t);font:inherit;font-size:11px}
+.story i{display:flex;align-items:center;justify-content:center;width:58px;height:58px;margin:0 auto 4px;border-radius:50%;font-style:normal;font-weight:bold;font-size:20px;color:#fff;background:linear-gradient(135deg,#b45309,#0e7490);border:3px solid var(--card);box-shadow:0 0 0 3px #f59e0b}
+.story.on i{box-shadow:0 0 0 3px #0e7490}
+#bnav{position:fixed;bottom:0;inset-inline:0;background:var(--card);border-top:1px solid var(--l);display:flex;justify-content:space-around;z-index:6;padding:4px 0 calc(4px + env(safe-area-inset-bottom))}
+#bnav button{background:none;border:0;font:inherit;font-size:11px;color:var(--m);display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;position:relative;padding:2px 8px}
+#bnav button span{font-size:21px}
+#bnav button.on{color:var(--c);font-weight:bold}
+#bnav .badge{position:absolute;top:-2px;inset-inline-start:2px}
+body{padding-bottom:62px}
+.post video{width:100%;max-height:75vh;border-radius:8px;background:#000;display:block}
+.reelbar{display:flex;gap:8px;align-items:center;margin-bottom:10px;font-weight:bold}
+.reels .post{scroll-snap-align:start}
+.up{font-size:12px;color:var(--m);margin-top:6px}
+@media(min-width:900px){
+ .layout{grid-template-columns:230px 1fr}
+ #side{display:block;position:sticky;top:60px;align-self:start;padding:12px}
+ #side button{display:flex;gap:10px;align-items:center;width:100%;text-align:start;background:none;border:0;font:inherit;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--t);margin-bottom:2px}
+ #side button:hover{background:var(--l)}
+ #side button.on{background:var(--c);color:#fff}
+ #side h4{margin:14px 12px 6px;color:var(--m);font-size:13px}
+ #side .ic{font-size:20px;width:26px;text-align:center}
+ #chips{display:none}
+ #bnav{display:none}body{padding-bottom:0}
+}
 </style>
 </head>
 <body>
-<header><h1>🏛️ أهل الأقصر</h1><div><button id="dk" title="الوضع الليلي">🌙</button> <button id="nt" hidden>🔔</button> <button id="adm" hidden>البلاغات</button> <button id="me" hidden></button></div></header>
+<header><div class="brand"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="#b45309"/><circle cx="32" cy="26" r="11" fill="#fcd34d"/><path d="M0 44h64v20H0z" fill="#0e7490"/><path d="M0 48q8-5 16 0t16 0 16 0 16 0v4q-8-5-16 0t-16 0-16 0-16 0z" fill="#67e8f9" opacity=".6"/><path d="M29 14l3-8 3 8-1 30h-4z" fill="#78350f"/><rect x="10" y="30" width="5" height="16" fill="#92400e"/><rect x="19" y="30" width="5" height="16" fill="#92400e"/><rect x="40" y="30" width="5" height="16" fill="#92400e"/><rect x="49" y="30" width="5" height="16" fill="#92400e"/><rect x="8" y="27" width="18" height="4" fill="#78350f"/><rect x="38" y="27" width="18" height="4" fill="#78350f"/></svg><h1>أهل الأقصر</h1></div><input class="srch" id="q" placeholder="🔍 ابحث في المنصة"><div><button id="dk" title="الوضع الليلي">🌙</button> <button id="nt" hidden>🔔</button> <button id="adm" hidden>البلاغات</button> <button id="me" hidden></button></div></header>
+<div class="layout"><aside id="side"></aside>
 <main>
-<div id="auth" class="card" hidden>
+<div id="auth" class="card" hidden><div class="herobox"><svg class="hero" viewBox="0 0 800 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c2d12"/><stop offset=".55" stop-color="#ea580c"/><stop offset="1" stop-color="#fcd34d"/></linearGradient><linearGradient id="nl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#164e63"/></linearGradient></defs><rect width="800" height="220" fill="url(#sk)"/><circle cx="560" cy="120" r="46" fill="#fef3c7" opacity=".95"/><g fill="#451a03"><path d="M120 160l14-86 14 86z"/><path d="M132 66l2-12 2 12z"/><rect x="230" y="96" width="14" height="64"/><rect x="262" y="96" width="14" height="64"/><rect x="294" y="96" width="14" height="64"/><rect x="326" y="96" width="14" height="64"/><rect x="358" y="96" width="14" height="64"/><rect x="220" y="86" width="162" height="12"/><rect x="214" y="78" width="174" height="8"/><rect x="640" y="110" width="12" height="50"/><rect x="668" y="110" width="12" height="50"/><rect x="696" y="110" width="12" height="50"/><rect x="632" y="100" width="84" height="10"/></g><rect y="160" width="800" height="60" fill="url(#nl)"/><path d="M0 178q50-12 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0" fill="none" stroke="#67e8f9" stroke-width="3" opacity=".6"/><path d="M0 198q50-12 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0" fill="none" stroke="#67e8f9" stroke-width="3" opacity=".4"/></svg><div class="tt"><b>منصة أهل الأقصر</b><span>مكان واحد يجمع كل أهل الأقصر</span></div></div>
  <h3 style="margin-top:0" id="at">دخول</h3>
  <input id="un" placeholder="اسم المستخدم (إنجليزي أو أرقام، 3 حروف على الأقل)" maxlength="20" autocapitalize="none" dir="ltr">
  <div class="row"><input id="pw" type="password" placeholder="الرقم السري (6 خانات على الأقل)" maxlength="40" dir="ltr"></div>
@@ -69,18 +108,22 @@ body.dark .tag{background:#4a3520;color:#f0c890}
  <div id="er" style="color:#c0262d;margin-top:8px"></div>
 </div>
 <div id="app" hidden>
+ <div class="herobox"><svg class="hero" viewBox="0 0 800 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c2d12"/><stop offset=".55" stop-color="#ea580c"/><stop offset="1" stop-color="#fcd34d"/></linearGradient><linearGradient id="nl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#164e63"/></linearGradient></defs><rect width="800" height="220" fill="url(#sk)"/><circle cx="560" cy="120" r="46" fill="#fef3c7" opacity=".95"/><g fill="#451a03"><path d="M120 160l14-86 14 86z"/><path d="M132 66l2-12 2 12z"/><rect x="230" y="96" width="14" height="64"/><rect x="262" y="96" width="14" height="64"/><rect x="294" y="96" width="14" height="64"/><rect x="326" y="96" width="14" height="64"/><rect x="358" y="96" width="14" height="64"/><rect x="220" y="86" width="162" height="12"/><rect x="214" y="78" width="174" height="8"/><rect x="640" y="110" width="12" height="50"/><rect x="668" y="110" width="12" height="50"/><rect x="696" y="110" width="12" height="50"/><rect x="632" y="100" width="84" height="10"/></g><rect y="160" width="800" height="60" fill="url(#nl)"/><path d="M0 178q50-12 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0" fill="none" stroke="#67e8f9" stroke-width="3" opacity=".6"/><path d="M0 198q50-12 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0" fill="none" stroke="#67e8f9" stroke-width="3" opacity=".4"/></svg><div class="tt"><b>منصة أهل الأقصر</b><span>مكان واحد يجمع كل أهل الأقصر</span></div></div>
+ <div class="stories" id="stories"></div>
  <div style="text-align:center;font-size:12px;margin-bottom:6px"><a href="terms.html" style="color:var(--m)">الشروط والقواعد</a></div>
  <div class="card">
   <textarea id="tx" placeholder="اكتب حاجة لأهل الأقصر..." maxlength="1500"></textarea>
-  <div class="row"><select id="cat" style="width:auto"></select><input type="file" id="img" accept="image/*" style="width:auto;flex:1"><button class="btn" id="pub">نشر</button></div>
+  <div class="row"><select id="cat" style="width:auto"></select><input type="file" id="img" accept="image/*,video/mp4,video/webm,video/quicktime" style="width:auto;flex:1"><button class="btn" id="pub">نشر</button></div>
  </div>
- <div class="chips" id="chips"></div>
- <div class="card filters"><input id="q" placeholder="بحث"><select id="fa"><option value="">كل المناطق</option></select><button class="ghost" id="rf">تحديث</button></div>
+ <div class="up" id="uphint">صورة أو فيديو قصير (ريل): بحد أقصى 60 ثانية و15 ميجا.</div>
+ <div class="chips" id="chips"></div><div class="reelbar" id="reelbar" hidden>🎬 ريلز · فيديوهات قصيرة من أهل الأقصر</div>
+ <div class="card filters"><select id="fa"><option value="">كل المناطق</option></select><button class="ghost" id="rf">تحديث</button></div>
  <div id="feed"></div>
 </div>
 <div id="modal" class="card" hidden></div>
 <div id="viewer" hidden><img alt=""></div>
-</main>
+</main></div>
+<nav id="bnav" hidden></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SB_URL="https://mvbogyzncrxulagneyvl.supabase.co",SB_KEY="sb_publishable_6NG5NuXODNDNHxaN0cuE8A_5ScGBHno",DOM="@luxor-users.com";
@@ -92,10 +135,24 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const ago=t=>{const m=Math.floor((Date.now()-new Date(t))/60000);if(m<1)return'الآن';if(m<60)return'من '+m+' دقيقة';const h=Math.floor(m/60);if(h<24)return'من '+h+' ساعة';return'من '+Math.floor(h/24)+' يوم'};
 Object.entries(AREA_GROUPS).forEach(([g,l])=>{for(const id of ['ar','fa']){const og=document.createElement('optgroup');og.label=g;l.forEach(a=>og.appendChild(new Option(a,a)));$(id).appendChild(og)}});
 const CATS=['عام','وظائف','خدمات','فعاليات','أخبار','بيع وشراء','أسئلة'];
-let cf='',me=null,prof=null,posts=[],signup=false,busy=false;
+let fg='',view='home',cf='',me=null,prof=null,posts=[],signup=false,busy=false;
 CATS.forEach(c=>$('cat').add(new Option(c,c)));
+const ICONS={'الكل':'🏠','عام':'💬','وظائف':'💼','خدمات':'🛠️','فعاليات':'🎉','أخبار':'📰','بيع وشراء':'🛒','أسئلة':'❓'};
+function menu(){
+ const it=(k,ic,lb,on)=>`<button class="${on?'on':''}" ${k}><span class="ic">${ic}</span>${lb}</button>`;
+ $('side').innerHTML='<h4>الأقسام</h4>'+it('data-v="home" data-cf=""','🏠','الرئيسية',view==='home'&&!cf)+it('data-v="reels"','🎬','ريلز',view==='reels')+['عام','وظائف','خدمات','فعاليات','أخبار','بيع وشراء','أسئلة'].map(c=>it(`data-v="home" data-cf="${c}"`,ICONS[c],c,view==='home'&&cf===c)).join('')+'<h4>المنصة</h4><button onclick="location.href=\'terms.html\'"><span class="ic">📜</span>الشروط والقواعد</button>';
+ $('bnav').innerHTML=[['home','🏠','الرئيسية'],['reels','🎬','ريلز'],['post','➕','نشر'],['nt2','🔔','إشعارات'],['me2','👤','حسابي']].map(([k,ic,lb])=>`<button data-n="${k}" class="${(k==='home'&&view==='home')||(k==='reels'&&view==='reels')?'on':''}"><span>${ic}</span>${lb}</button>`).join('');
+ $('stories').innerHTML=Object.keys(AREA_GROUPS).map(g=>`<button class="story ${fg===g?'on':''}" data-g="${g}"><i>${g[0]}</i>${g}</button>`).join('');
+ $('reelbar').hidden=view!=='reels';$('feed').className=view==='reels'?'reels':'';
+}
+$('side').onclick=e=>{const b=e.target.closest('button');if(!b||!b.dataset.v)return;view=b.dataset.v;cf=b.dataset.cf||'';chips();menu();render();window.scrollTo(0,0)};
+$('bnav').onclick=e=>{const b=e.target.closest('button');if(!b)return;const k=b.dataset.n;
+ if(k==='home'||k==='reels'){view=k;cf='';chips();menu();render();window.scrollTo(0,0)}
+ else if(k==='post'){view='home';menu();render();$('tx').scrollIntoView({behavior:'smooth',block:'center'});$('tx').focus()}
+ else if(k==='nt2')$('nt').click();else if(k==='me2')$('me').click()};
+$('stories').onclick=e=>{const b=e.target.closest('button');if(!b)return;fg=fg===b.dataset.g?'':b.dataset.g;menu();render()};
 function chips(){$('chips').innerHTML=['الكل',...CATS].map(c=>`<button class="chip ${(c==='الكل'?'':c)===cf?'on':''}" data-cf="${c==='الكل'?'':c}">${c}</button>`).join('')}
-$('chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;cf=b.dataset.cf;chips();render()};chips();
+$('chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;cf=b.dataset.cf;chips();menu();render()};chips();
 if(localStorage.dark==='1')document.body.classList.add('dark');
 $('dk').onclick=()=>{const d=document.body.classList.toggle('dark');localStorage.dark=d?'1':'0';$('dk').textContent=d?'☀️':'🌙'};
 $('dk').textContent=document.body.classList.contains('dark')?'☀️':'🌙';
@@ -126,22 +183,24 @@ async function init(){
  const {data}=await sb.auth.getSession();me=data.session?.user||null;
  if(me){const r=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle();prof=r.data}
  else prof=null;
- $('auth').hidden=!!prof;$('app').hidden=!prof;$('me').hidden=!prof;$('adm').hidden=!(prof&&prof.is_admin);
+ $('auth').hidden=!!prof;$('app').hidden=!prof;$('bnav').hidden=!prof;$('side').style.visibility=prof?'visible':'hidden';$('me').hidden=!prof;$('adm').hidden=!(prof&&prof.is_admin);
  if(prof){$('me').textContent=prof.name;load();notif()}
 }
 async function load(){
- const r=await sb.from('posts').select('id,user_id,body,image,category,created_at,profiles!posts_user_id_fkey(name,area),likes(user_id),comments(id,user_id,body,created_at,profiles!comments_user_id_fkey(name))').order('created_at',{ascending:false}).limit(60);
+ const r=await sb.from('posts').select('id,user_id,body,image,video,category,created_at,profiles!posts_user_id_fkey(name,area),likes(user_id),comments(id,user_id,body,created_at,profiles!comments_user_id_fkey(name))').order('created_at',{ascending:false}).limit(60);
  if(r.error){$('feed').innerHTML='<div class="empty">تعذر التحميل: '+esc(r.error.message)+'</div>';return}
  posts=r.data;render();
 }
+const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(view!=='reels'){v.pause();return}if(e.isIntersecting&&e.intersectionRatio>.6)v.play().catch(()=>{});else v.pause()}),{threshold:[0,.6]});
 function render(){
  const q=$('q').value.trim(),fa=$('fa').value;
- const list=posts.filter(p=>(!cf||p.category===cf)&&(!fa||p.profiles?.area===fa)&&(!q||((p.body||'')+(p.profiles?.name||'')).includes(q)));
+ const list=posts.filter(p=>(view!=='reels'||p.video)&&(!cf||p.category===cf)&&(!fa||p.profiles?.area===fa)&&(!fg||AREA_GROUPS[fg].includes(p.profiles?.area))&&(!q||((p.body||'')+(p.profiles?.name||'')).includes(q)));
+ menu();setTimeout(()=>document.querySelectorAll('#feed video').forEach(v=>io.observe(v)),0);
  $('feed').innerHTML=list.length?list.map(p=>{
   const liked=p.likes.some(l=>l.user_id===me.id),mine=p.user_id===me.id,can=mine||prof.is_admin;
   const cms=[...p.comments].sort((a,b)=>a.created_at<b.created_at?-1:1);
   return `<div class="card post"><div class="ph"><div class="av">${esc((p.profiles?.name||'?')[0])}</div><div><b class="nm" data-u="${p.user_id}">${esc(p.profiles?.name)}</b><span class="tag">${esc(p.category||'عام')}</span><small>${esc(p.profiles?.area)} · ${ago(p.created_at)}</small></div></div>
-  <p>${esc(p.body)}</p>${p.image?`<img src="${p.image}" alt="">`:''}
+  <p>${esc(p.body)}</p>${p.image?`<img src="${p.image}" alt="">`:''}${p.video?`<video src="${esc(p.video)}" controls playsinline muted loop preload="metadata"></video>`:''}
   <div class="acts"><button class="ghost ${liked?'on':''}" data-l="${p.id}">${liked?'❤️':'🤍'} ${p.likes.length}</button>${can?`<button class="ghost" data-d="${p.id}">حذف</button>`:''}${mine?'':`<button class="ghost" data-r="${p.id}">إبلاغ</button>`}</div>
   ${cms.map(c=>`<div class="cm"><b>${esc(c.profiles?.name)}</b> ${esc(c.body)}${(c.user_id===me.id||prof.is_admin)?` <button class="ghost" data-dc="${c.id}">✕</button>`:''}</div>`).join('')}
   <div class="row"><input placeholder="اكتب تعليق" data-ci="${p.id}" maxlength="400"><button class="btn" data-c="${p.id}">إرسال</button></div></div>`}).join(''):'<div class="empty">مفيش منشورات لسه. كن أول واحد يكتب.</div>';
@@ -150,8 +209,20 @@ function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload
 $('pub').onclick=async()=>{
  if(busy)return;const t=$('tx').value.trim(),f=$('img').files[0];if(!t&&!f)return;
  busy=true;$('pub').textContent='...';
- const img=f?await shrink(f):null;
- const r=await sb.from('posts').insert({user_id:me.id,body:t,image:img,category:$('cat').value});
+ let img=null,vid=null;
+ try{
+  if(f&&f.type.startsWith('video/')){
+   if(f.size>15*1024*1024)throw new Error('الفيديو أكبر من 15 ميجا');
+   const dur=await new Promise((ok,no)=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>ok(v.duration);v.onerror=()=>no(new Error('الفيديو ده مش مدعوم، جرب mp4'));v.src=URL.createObjectURL(f)});
+   if(dur>61)throw new Error('الفيديو أطول من 60 ثانية');
+   $('pub').textContent='جاري رفع الفيديو...';
+   const ext=f.type==='video/webm'?'webm':f.type==='video/quicktime'?'mov':'mp4',path=me.id+'/'+Date.now()+'.'+ext;
+   const up=await sb.storage.from('reels').upload(path,f,{contentType:f.type});
+   if(up.error)throw new Error(up.error.message);
+   vid=sb.storage.from('reels').getPublicUrl(path).data.publicUrl;
+  }else if(f)img=await shrink(f);
+ }catch(e){busy=false;$('pub').textContent='نشر';return alert('تعذر رفع الملف: '+e.message)}
+ const r=await sb.from('posts').insert({user_id:me.id,body:t,image:img,video:vid,category:$('cat').value});
  busy=false;$('pub').textContent='نشر';
  if(r.error)return alert(/RATE_LIMIT/.test(r.error.message)?'وصلت للحد الأقصى للنشر في الساعة، جرب بعد شوية':'تعذر النشر: '+r.error.message);
  $('tx').value='';$('img').value='';load();
