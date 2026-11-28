@@ -42,7 +42,7 @@ const sb=supabase.createClient("https://mvbogyzncrxulagneyvl.supabase.co","sb_pu
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fd=t=>new Date(t).toLocaleString('ar-EG',{dateStyle:'short',timeStyle:'short'});
-const TABS=[['review','المراجعة'],['services','الخدمات'],['stats','إحصائيات'],['reports','البلاغات'],['posts','المنشورات'],['comments','التعليقات'],['users','الأعضاء']];
+const TABS=[['review','المراجعة'],['services','الخدمات'],['msgs','بلاغات الرسائل'],['stats','إحصائيات'],['reports','البلاغات'],['posts','المنشورات'],['comments','التعليقات'],['users','الأعضاء']];
 let tab='review',me=null;
 const FLAGS=['سياس','حزب','انتخاب','إخوان','اخوان','حكومة','الحكومه','الرئيس','السيسي','مرسي','مبارك','ثورة','ثوره','مظاهر','إرهاب','ارهاب','معارض','تيار','الجيش','الشرطة','الداخلية','سكس','جنس','قتل','شتيمة','كلب','حمار','ابن ال'];
 const REASONS=['محتوى سياسي','محتوى حساس أو غير مناسب','إساءة أو سب لشخص','إعلان مخالف أو مضلل','سبام أو تكرار','غير مفهوم أو ناقص','سبب آخر'];
@@ -68,6 +68,7 @@ async function show(){
  if(tab==='review')return review(v);
  if(tab==='services')return services(v);
  if(tab==='stats')return stats(v);
+ if(tab==='msgs')return msgs(v);
  if(tab==='reports')return reports(v);
  if(tab==='posts')return posts(v);
  if(tab==='comments')return comments(v);
@@ -121,6 +122,16 @@ async function review(v){
  <div class="row"><button class="g" data-a="ap" data-id="${p.id}">✅ نشر</button></div>
  <div class="row"><select id="rs-${p.id}">${REASONS.map(x=>`<option>${x}</option>`).join('')}</select><input id="rt-${p.id}" placeholder="تفاصيل إضافية (اختياري)" maxlength="150"><button class="r" data-a="rj" data-id="${p.id}">❌ رفض</button></div></div>`}).join(''):'<div class="card">مفيش منشورات في انتظار المراجعة ✅</div>';
 }
+async function msgs(v){
+ const r=await sb.from('message_reports').select('id,message_id,reporter_id,sender_id,body_snapshot,reason,handled,created_at').order('created_at',{ascending:false}).limit(200);
+ if(r.error)return v.innerHTML='<div class="card">'+esc(r.error.message)+'</div>';
+ const rows=(r.data||[]).filter(x=>!x.handled);
+ const ids=[...new Set(rows.flatMap(x=>[x.reporter_id,x.sender_id]).filter(Boolean))];
+ let nm={};
+ if(ids.length){const p=await sb.from('profiles').select('id,name').in('id',ids);nm=Object.fromEntries((p.data||[]).map(x=>[x.id,x.name]))}
+ const tb=[...$('tabs').children].find(x=>x.dataset.t==='msgs');if(tb)tb.textContent='بلاغات الرسائل'+(rows.length?` (${rows.length})`:'');
+ v.innerHTML='<div class="card"><b>بلاغات الرسائل الخاصة</b><p class="up">الرسائل نفسها مشفرة، والنص هنا هو اللي صاحب البلاغ بعته وقت الإبلاغ بس.</p>'+(rows.length?rows.map(x=>`<div class="it"><b>${esc(nm[x.sender_id]||'عضو')}</b> <small>— بلّغ عنه ${esc(nm[x.reporter_id]||'عضو')} · ${fd(x.created_at)}${x.reason?' · السبب: '+esc(x.reason):''}</small><div style="margin-top:6px;background:#fff6e0;padding:8px;border-radius:8px">${esc(x.body_snapshot||'')}</div><div class="row"><button class="r" data-a="dmsg" data-id="${x.message_id}">حذف الرسالة</button><button class="r" data-a="bansnd" data-id="${x.sender_id}">حظر المرسل</button><button class="g" data-a="hmsg" data-id="${x.id}">تم</button></div></div>`).join(''):'<div>مفيش بلاغات</div>')+'</div>';
+}
 async function reports(v){
  const r=await sb.from('reports').select('post_id,created_at,reason,posts(id,body,user_id,profiles!posts_user_id_fkey(name))').order('created_at',{ascending:false});
  if(r.error)return v.innerHTML=esc(r.error.message);
@@ -153,6 +164,9 @@ $('view').onclick=async e=>{
   case 'sap':r=await sb.rpc('admin_review_service',{sid:id,st:'approved',reason:null});break;
   case 'srj':{const a=$('srs-'+id).value,x=$('srt-'+id).value.trim();r=await sb.rpc('admin_review_service',{sid:id,st:'rejected',reason:a+(x?' - '+x:'')});break}
   case 'sdv':if(!confirm('حذف الخدمة؟'))return;r=await sb.from('services').delete().eq('id',id);break;
+  case 'dmsg':if(!confirm('حذف الرسالة نهائياً؟'))return;r=await sb.from('messages').delete().eq('id',id);await sb.from('message_reports').update({handled:true}).eq('message_id',id);break;
+  case 'hmsg':r=await sb.from('message_reports').update({handled:true}).eq('id',id);break;
+  case 'bansnd':if(!confirm('حظر العضو؟'))return;r=await sb.rpc('admin_set_ban',{uid:id,flag:true});break;
   case 'ap':r=await sb.rpc('admin_review_post',{pid:id,st:'approved',reason:null});break;
   case 'rj':{const a=$('rs-'+id).value,x=$('rt-'+id).value.trim();r=await sb.rpc('admin_review_post',{pid:id,st:'rejected',reason:a+(x?' - '+x:'')});break}
   case 'dp':if(!confirm('حذف المنشور؟'))return;r=await sb.from('posts').delete().eq('id',id);break;
