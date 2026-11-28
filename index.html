@@ -734,8 +734,11 @@ async function unlockKeys(pw){
  try{jwk=JSON.parse(TD.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:B64.d(row.iv)},kek,B64.d(row.enc))))}catch(_){return false}
  myPriv=await crypto.subtle.importKey('jwk',jwk,{name:'ECDH',namedCurve:'P-256'},true,['deriveKey']);
  const p=await sb.from('profiles').select('pub_key').eq('id',me.id).maybeSingle();
+ const hadPub=!!(p.data&&p.data.pub_key);
  myPub=(p.data&&p.data.pub_key)||{kty:'EC',crv:'P-256',x:jwk.x,y:jwk.y};
- pubCache[me.id]=myPub;return true;
+ pubCache[me.id]=myPub;
+ if(!hadPub){try{await sb.from('profiles').update({pub_key:myPub}).eq('id',me.id)}catch(_){}}
+ return true;
 }
 async function rewrapKeys(pw){
  if(!myPriv)throw new Error('locked');
