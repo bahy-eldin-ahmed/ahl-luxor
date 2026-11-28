@@ -159,10 +159,63 @@ body.dark .stt.rj{background:#2A1319;border-color:#4A2029;color:#F7B8C3}
 .filebtn:hover{border-color:var(--c3);color:var(--c2)}
 .wel{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:2px 0 0}
 .wel span{background:var(--card);border:1px solid var(--l);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--m);box-shadow:var(--sh)}
+
+/* ===== صفحة الإعدادات ===== */
+#setpage{position:fixed;inset:0;z-index:30;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:34px}
+#setpage[hidden]{display:none}
+.sethead{position:sticky;top:0;z-index:2;background:linear-gradient(115deg,#08322F 0%,#0B5A54 48%,#12968A 100%);color:#fff;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 4px 18px rgba(8,50,47,.22)}
+.sethead b{font-size:17px;font-weight:800}
+.sethead .back{background:rgba(255,255,255,.16);border:0;color:#fff;border-radius:999px;padding:7px 13px;font:inherit;font-size:13px;cursor:pointer}
+.setbody{padding:12px;max-width:620px;margin:0 auto}
+.setcard h4{margin:0 0 8px;font-size:15px;color:var(--c2);display:flex;align-items:center;gap:7px}
+.dark .setcard h4{color:#8FE0D3}
+.setcard label{display:block;font-size:13px;color:var(--m);margin-top:10px}
+.setcard label input,.setcard label select{width:100%;margin-top:5px}
+.setcard .btn{margin-top:12px;width:100%}
+.setcard .lnk{display:block;width:100%;text-align:start;border:1px solid var(--l);border-radius:12px;padding:11px 12px;margin-top:8px;background:var(--card);color:var(--t);font:inherit;font-size:14px;cursor:pointer}
+.setcard .lnk:hover{border-color:var(--c3)}
+.swrow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;color:var(--t)}
+.sw{width:50px;height:28px;border-radius:999px;background:var(--l);border:0;position:relative;cursor:pointer;flex:none;transition:background .2s}
+.sw::after{content:'';position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:inset-inline-start .2s}
+.sw.on{background:var(--c)}
+.sw.on::after{inset-inline-start:25px}
+.setnote{font-size:12px;color:var(--m);margin-top:8px;line-height:1.75}
+.setok{font-size:13px;color:var(--c2);margin-top:8px;font-weight:700}
+.dark .setok{color:#8FE0D3}
+.setbad{font-size:13px;color:var(--danger);margin-top:8px;font-weight:700}
+.setver{text-align:center;font-size:12px;color:var(--m);margin:16px 0 0}
+.setpriv .cm{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}
+
+/* ===== الرسائل الخاصة ===== */
+#msgpage{position:fixed;inset:0;z-index:31;background:var(--bg);display:flex;flex-direction:column}
+#msgpage[hidden]{display:none}
+#msglist{flex:1;overflow-y:auto;padding:10px 12px 20px}
+.thread{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--l);border-radius:14px;padding:10px 11px;margin-bottom:8px;cursor:pointer;box-shadow:var(--sh)}
+.thread:active{transform:scale(.995)}
+.thread .av{width:42px;height:42px}
+.thread .tx{flex:1;min-width:0}
+.thread .tx b{display:block;font-size:14px}
+.thread .tx small{display:block;color:var(--m);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thread .un{background:var(--c);color:#fff;border-radius:999px;font-size:11px;padding:1px 8px;font-weight:700;flex:none}
+#chatbox{flex:1;display:flex;flex-direction:column;min-height:0}
+#chatbox[hidden]{display:none}
+#chatlog{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:7px;background:var(--bg)}
+.bub{max-width:84%;padding:8px 12px;border-radius:14px;font-size:14px;line-height:1.65;word-break:break-word;box-shadow:var(--sh)}
+.bub.me{align-self:flex-start;background:linear-gradient(180deg,var(--c3),var(--c));color:#fff;border-bottom-right-radius:4px}
+.bub.you{align-self:flex-end;background:var(--card);border:1px solid var(--l);border-bottom-left-radius:4px}
+.bub small{display:block;font-size:10px;opacity:.72;margin-top:3px}
+.bub .rpb{background:none;border:0;font-size:12px;cursor:pointer;opacity:.65;padding:0 3px;color:inherit}
+.chatfoot{display:flex;gap:8px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--l);background:var(--card);align-items:center}
+.chatfoot input{flex:1;border-radius:999px;min-width:0}
+.lockbox{padding:6px 2px}
+.lockbox input{width:100%;margin-top:8px}
+.msgnote{font-size:12px;color:var(--m);padding:8px 12px;background:var(--goldbg);border-bottom:1px solid var(--l);line-height:1.7}
+.dark .msgnote{background:#241E10;color:#EBD9A8;border-color:#3C3218}
+#modal{z-index:45}
 </style>
 </head>
 <body><noscript><h1>أهل الأقصر</h1><p>منصة مجانية بتجمع شباب وأهالي الأقصر: منشورات، وظائف، خدمات، فعاليات، أخبار، بيع وشراء وريلز. فعّل JavaScript عشان تستخدم المنصة.</p><p><a href="terms.html">الشروط والقواعد</a></p></noscript>
-<header><div class="brand"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lgo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#12968A"/><stop offset="1" stop-color="#08322F"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#lgo)"/><circle cx="32" cy="22" r="7.5" fill="#E7B15C"/><rect x="15" y="29" width="6" height="19" rx="2" fill="#EAF6F3"/><rect x="29" y="29" width="6" height="19" rx="2" fill="#EAF6F3"/><rect x="43" y="29" width="6" height="19" rx="2" fill="#EAF6F3"/><path d="M10 52h44" stroke="#7FD8CC" stroke-width="3" stroke-linecap="round"/><path d="M14 57.5q6-4 12 0t12 0 12 0" stroke="#7FD8CC" stroke-width="2" fill="none" opacity=".6"/></svg><h1>أهل الأقصر</h1></div><input class="srch" id="q" placeholder="🔍 ابحث في المنصة"><div><button id="dk" title="الوضع الليلي">🌙</button> <button id="nt" hidden>🔔</button> <button id="adm" hidden>البلاغات</button> <button id="me" hidden></button></div></header>
+<header><div class="brand"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lgo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#12968A"/><stop offset="1" stop-color="#08322F"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#lgo)"/><circle cx="32" cy="22" r="7.5" fill="#E7B15C"/><rect x="15" y="29" width="6" height="19" rx="2" fill="#EAF6F3"/><rect x="29" y="29" width="6" height="19" rx="2" fill="#EAF6F3"/><rect x="43" y="29" width="6" height="19" rx="2" fill="#EAF6F3"/><path d="M10 52h44" stroke="#7FD8CC" stroke-width="3" stroke-linecap="round"/><path d="M14 57.5q6-4 12 0t12 0 12 0" stroke="#7FD8CC" stroke-width="2" fill="none" opacity=".6"/></svg><h1>أهل الأقصر</h1></div><input class="srch" id="q" placeholder="🔍 ابحث في المنصة"><div><button id="dk" title="الوضع الليلي">🌙</button> <button id="ms" title="الرسائل" hidden>💬</button> <button id="st" title="الإعدادات" hidden>⚙️</button> <button id="nt" hidden>🔔</button> <button id="adm" hidden>البلاغات</button> <button id="me" hidden></button></div></header>
 <div class="layout"><aside id="side"></aside>
 <main>
 <div id="auth" class="card" hidden><div class="herobox"><svg class="hero" viewBox="0 0 800 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#04211E"/><stop offset=".58" stop-color="#0A4E48"/><stop offset="1" stop-color="#12968A"/></linearGradient><linearGradient id="riv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E7F75"/><stop offset="1" stop-color="#052C29"/></linearGradient><radialGradient id="sung" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFD98A"/><stop offset="1" stop-color="#DFA43C"/></radialGradient><radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#DFA43C" stop-opacity=".5"/><stop offset="1" stop-color="#DFA43C" stop-opacity="0"/></radialGradient></defs><rect width="800" height="220" fill="url(#sky)"/><circle cx="596" cy="92" r="118" fill="url(#glow)"/><circle cx="596" cy="92" r="33" fill="url(#sung)"/><g fill="#F4E7C8" opacity=".8"><circle cx="118" cy="34" r="1.8"/><circle cx="212" cy="22" r="1.4"/><circle cx="330" cy="40" r="1.6"/><circle cx="432" cy="20" r="1.3"/><circle cx="502" cy="48" r="1.5"/><circle cx="700" cy="28" r="1.6"/><circle cx="760" cy="54" r="1.3"/></g><g fill="#062B27" opacity=".94"><path d="M96 152l16-96 16 96z"/><path d="M110 56l2-14 2 14z"/><rect x="230" y="86" width="15" height="66" rx="2"/><rect x="264" y="86" width="15" height="66" rx="2"/><rect x="298" y="86" width="15" height="66" rx="2"/><rect x="332" y="86" width="15" height="66" rx="2"/><rect x="366" y="86" width="15" height="66" rx="2"/><rect x="220" y="76" width="172" height="12" rx="2"/><rect x="214" y="68" width="184" height="8" rx="2"/><rect x="640" y="104" width="13" height="48" rx="2"/><rect x="670" y="104" width="13" height="48" rx="2"/><rect x="700" y="104" width="13" height="48" rx="2"/><rect x="630" y="96" width="96" height="10" rx="2"/></g><rect y="152" width="800" height="68" fill="url(#riv)"/><path d="M0 168q50-12 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0" fill="none" stroke="#5FD6C8" stroke-width="2.5" opacity=".45"/><path d="M0 190q50-12 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0" fill="none" stroke="#DFA43C" stroke-width="2" opacity=".26"/><path d="M462 92q10-8 20 0M494 106q8-7 16 0" stroke="#04211E" stroke-width="2" fill="none" opacity=".45"/></svg><div class="tt"><b>منصة أهل الأقصر</b><span>مكان واحد يجمع كل أهل الأقصر</span></div></div>
@@ -192,6 +245,19 @@ body.dark .stt.rj{background:#2A1319;border-color:#4A2029;color:#F7B8C3}
  <div class="chips" id="chips"></div><div class="reelbar" id="reelbar" hidden>🎬 ريلز · فيديوهات قصيرة من أهل الأقصر</div>
  <div class="card filters" id="pfilters"><select id="fa"><option value="">كل المناطق</option></select><button class="ghost" id="rf">تحديث</button></div>
  <div id="feed"></div>
+ <div id="msgpage" hidden>
+  <div class="sethead"><button class="back" id="msgback">✕ إغلاق</button><b id="msgtitle">💬 الرسائل</b><span style="width:64px"></span></div>
+  <div class="msgnote">🔐 الرسائل مشفّرة من طرف لطرف: مفيش حد غيرك وغير الطرف التاني يقدر يقراها، ولا الإدارة. لو وصلك كلام وحش اضغط 🚩 جنب الرسالة.</div>
+  <div id="msglist"></div>
+  <div id="chatbox" hidden>
+   <div id="chatlog"></div>
+   <div class="chatfoot"><input id="msgin" maxlength="2000" placeholder="اكتب رسالة…"><button class="btn" id="msgsend">إرسال</button></div>
+  </div>
+ </div>
+ <div id="setpage" hidden>
+  <div class="sethead"><b>⚙️ الإعدادات</b><button class="back" id="setback">✕ إغلاق</button></div>
+  <div class="setbody" id="setbody"></div>
+ </div>
 </div>
 <div id="modal" class="card" hidden></div>
 <div id="viewer" hidden><img alt=""></div>
@@ -218,12 +284,12 @@ CATS.forEach(c=>$('cat').add(new Option(c,c)));
 const ICONS={'الكل':'🏠','عام':'💬','وظائف':'💼','خدمات':'🛠️','فعاليات':'🎉','أخبار':'📰','بيع وشراء':'🛒','أسئلة':'❓'};
 function menu(){
  const it=(k,ic,lb,on)=>`<button class="${on?'on':''}" ${k}><span class="ic">${ic}</span>${lb}</button>`;
- $('side').innerHTML='<h4>الأقسام</h4>'+it('data-v="home" data-cf=""','🏠','الرئيسية',view==='home'&&!cf)+it('data-v="services"','🛠️','دليل الخدمات',view==='services')+it('data-v="myservices"','📋','خدماتي',view==='myservices')+it('data-v="reels"','🎬','ريلز',view==='reels')+it('data-v="following"','👥','المتابَعين',view==='following')+it('data-v="saved"','🔖','المحفوظات',view==='saved')+['عام','وظائف','خدمات','فعاليات','أخبار','بيع وشراء','أسئلة'].map(c=>it(`data-v="home" data-cf="${c}"`,ICONS[c],c,view==='home'&&cf===c)).join('')+'<h4>المنصة</h4><button onclick="location.href=\'services.html\'"><span class="ic">🛠️</span>دليل الخدمات العام</button><button onclick="location.href=\'terms.html\'"><span class="ic">📜</span>الشروط والقواعد</button>';
+ $('side').innerHTML='<h4>الأقسام</h4>'+it('data-v="home" data-cf=""','🏠','الرئيسية',view==='home'&&!cf)+it('data-msg="1"','💬','الرسائل',false)+it('data-v="services"','🛠️','دليل الخدمات',view==='services')+it('data-v="myservices"','📋','خدماتي',view==='myservices')+it('data-v="reels"','🎬','ريلز',view==='reels')+it('data-v="following"','👥','المتابَعين',view==='following')+it('data-v="saved"','🔖','المحفوظات',view==='saved')+['عام','وظائف','خدمات','فعاليات','أخبار','بيع وشراء','أسئلة'].map(c=>it(`data-v="home" data-cf="${c}"`,ICONS[c],c,view==='home'&&cf===c)).join('')+'<h4>المنصة</h4><button data-set="1"><span class="ic">⚙️</span>الإعدادات</button><button onclick="location.href=\'services.html\'"><span class="ic">🛠️</span>دليل الخدمات العام</button><button onclick="location.href=\'terms.html\'"><span class="ic">📜</span>الشروط والقواعد</button>';
  $('bnav').innerHTML=[['home','🏠','الرئيسية'],['services','🛠️','خدمات'],['post','➕','نشر'],['reels','🎬','ريلز'],['me2','👤','حسابي']].map(([k,ic,lb])=>`<button data-n="${k}" class="${(k==='home'&&view==='home')||(k==='reels'&&view==='reels')||(k==='services'&&(view==='services'||view==='myservices'))?'on':''}"><span>${ic}</span>${lb}</button>`).join('');
  $('stories').innerHTML=Object.keys(AREA_GROUPS).map(g=>`<button class="story ${fg===g?'on':''}" data-g="${g}"><i>${g[0]}</i>${g}</button>`).join('');
  $('reelbar').hidden=view!=='reels';$('feed').className=view==='reels'?'reels':'';
 }
-$('side').onclick=e=>{const b=e.target.closest('button');if(!b||!b.dataset.v)return;view=b.dataset.v;cf=b.dataset.cf||'';chips();menu();render();window.scrollTo(0,0)};
+$('side').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.msg)return openMessages();if(b.dataset.set)return openSettings();if(!b.dataset.v)return;view=b.dataset.v;cf=b.dataset.cf||'';chips();menu();render();window.scrollTo(0,0)};
 $('bnav').onclick=e=>{const b=e.target.closest('button');if(!b)return;const k=b.dataset.n;
  if(k==='home'||k==='reels'||k==='services'){view=k;cf='';if(k!=='services'){svCat='';svArea=''}chips();menu();render();window.scrollTo(0,0)}
  else if(k==='post'){view='home';menu();render();$('tx').scrollIntoView({behavior:'smooth',block:'center'});$('tx').focus()}
@@ -254,15 +320,15 @@ $('go').onclick=async()=>{
   const l=await sb.auth.signInWithPassword({email,password:p});
   if(l.error)return fail('اسم المستخدم أو الرقم السري غلط');
  }
- init();
+ pendingPw=p;init();
 };
 
 async function init(){
  const {data}=await sb.auth.getSession();me=data.session?.user||null;
  if(me){const r=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle();prof=r.data}
  else prof=null;
- $('auth').hidden=!!prof;$('app').hidden=!prof;$('bnav').hidden=!prof;$('side').style.visibility=prof?'visible':'hidden';$('me').hidden=!prof;$('adm').hidden=!(prof&&prof.is_admin);
- if(prof){$('me').textContent=prof.name;await loadMine();await loadServices();load();svJump();notif()}
+ $('auth').hidden=!!prof;$('app').hidden=!prof;$('bnav').hidden=!prof;$('side').style.visibility=prof?'visible':'hidden';$('me').hidden=!prof;$('st').hidden=!prof;$('ms').hidden=!prof;$('adm').hidden=!(prof&&prof.is_admin);
+ if(prof){$('me').textContent=prof.name;await loadMine();await loadServices();load();svJump();notif();msgBadge();if(pendingPw){const _pw=pendingPw;pendingPw=null;try{await unlockKeys(_pw)}catch(_){}}}
 }
 async function loadMine(){
  const [b,h,v,fo]=await Promise.all([sb.from('user_blocks').select('target_id,kind'),sb.from('hidden_posts').select('post_id'),sb.from('saved_posts').select('post_id'),sb.from('follows').select('followee_id').eq('follower_id',me.id)]);
@@ -473,6 +539,8 @@ $('modal').onclick=async e=>{
  const b=e.target.closest('button');if(!b)return;
  if(b.dataset.rs&&pcb){const f=pcb;pcb=null;return f(REASONS[+b.dataset.rs])}
  if(b.id==='svw'){view='saved';cf='';$('modal').hidden=true;menu();chips();render();window.scrollTo(0,0);return}
+ if(b.id==='gs'){$('modal').hidden=true;return openSettings()}
+ if(b.id==='dm'){$('modal').hidden=true;return openChat(b.dataset.u)}
  if(b.id==='ps')return privacy();
  if(b.dataset.ub){await sb.from('user_blocks').delete().match({user_id:me.id,target_id:b.dataset.ub});blk.delete(b.dataset.ub);render();return privacy()}
  if(b.id==='clh'){await sb.from('hidden_posts').delete().eq('user_id',me.id);hid.clear();render();return privacy()}
@@ -488,11 +556,14 @@ async function showProfile(id){
  const [p,c]=await Promise.all([sb.from('profiles').select('name,area,bio,created_at,username').eq('id',id).maybeSingle(),sb.from('posts').select('id',{count:'exact',head:true}).eq('user_id',id)]);
  if(!p.data){m.innerHTML='غير موجود';return}
  const x=p.data,mine=id===me.id;
- m.innerHTML=`<div class="ph"><div class="av">${esc(x.name[0])}</div><div><b>${esc(x.name)}</b><small>${esc(x.area)} · @${esc(x.username)}</small></div></div><p>${esc(x.bio||(mine?'أضف نبذة عنك':'مفيش نبذة'))}</p><small>${c.count||0} منشور · عضو من ${new Date(x.created_at).toLocaleDateString('ar-EG')}</small>${mine?'<div class="row"><input id="bio" maxlength="200" placeholder="نبذة عنك (200 حرف)" value="'+esc(x.bio||'')+'"><button class="btn" id="sbio">حفظ</button></div>':''}<div class="row"><button class="ghost" id="cl">إغلاق</button>${mine?'<button class="ghost" id="svw">🔖 المحفوظات</button><button class="ghost" id="ps">⚙️ الخصوصية والحظر</button><button class="ghost" id="lo">تسجيل خروج</button>':''}</div>`;
+ m.innerHTML=`<div class="ph"><div class="av">${esc(x.name[0])}</div><div><b>${esc(x.name)}</b><small>${esc(x.area)} · @${esc(x.username)}</small></div></div><p>${esc(x.bio||(mine?'أضف نبذة عنك':'مفيش نبذة'))}</p><small>${c.count||0} منشور · عضو من ${new Date(x.created_at).toLocaleDateString('ar-EG')}</small>${mine?'<div class="row"><input id="bio" maxlength="200" placeholder="نبذة عنك (200 حرف)" value="'+esc(x.bio||'')+'"><button class="btn" id="sbio">حفظ</button></div>':''}<div class="row"><button class="ghost" id="cl">إغلاق</button>${mine?'<button class="ghost" id="svw">🔖 المحفوظات</button><button class="ghost" id="gs">⚙️ الإعدادات</button>'+(mine?'':'<button class="ghost" id="dm" data-u="'+id+'">💬 رسالة</button>')+'<button class="ghost" id="ps">🛡️ الخصوصية والحظر</button><button class="ghost" id="lo">تسجيل خروج</button>':''}</div>`;
  if(mine)$('lo').onclick=async()=>{await sb.auth.signOut();$('modal').hidden=true;init()};
  if(mine)$('sbio').onclick=async()=>{const r=await sb.from('profiles').update({bio:$('bio').value.trim()}).eq('id',me.id);if(r.error)alert('خطأ: '+r.error.message);else showProfile(id)};
 }
 $('me').onclick=()=>showProfile(me.id);
+$('st').onclick=()=>openSettings();
+$('ms').onclick=()=>openMessages();
+$('setback').onclick=()=>closeSettings();
 const NT={react:(x)=>`${RX[x.reaction]?RX[x.reaction][0]:'👍'} تفاعل على منشورك`,creact:(x)=>`${RX[x.reaction]?RX[x.reaction][0]:'👍'} تفاعل على تعليقك`,comment:()=>'💬 علّق على منشورك',reply:()=>'↩️ رد على تعليقك',follow:()=>'➕ بدأ يتابعك'};
 async function ntData(){
  const since=localStorage.seen||'1970-01-01T00:00:00Z';
@@ -528,7 +599,7 @@ async function notif(){if(!prof)return;const since=localStorage.seen||'1970-01-0
  $('nt').hidden=false;$('nt').innerHTML='🔔'+(n?`<span class="badge">${n>99?'99+':n}</span>`:'');
  const bn=document.querySelector('#bnav [data-n="nt2"]');if(bn){bn.querySelector('.badge')?.remove();if(n)bn.insertAdjacentHTML('beforeend',`<span class="badge">${n>99?'99+':n}</span>`)}
  document.title=(n?`(${n}) `:'')+'أهل الأقصر';}
-setInterval(()=>{if(prof)notif();if(prof&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA')load()},30000);
+setInterval(()=>{if(prof){notif();msgBadge()}if(prof&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA')load()},30000);
 
 (()=>{const ib=$('ib');let dp=null;
  const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
@@ -542,6 +613,265 @@ setInterval(()=>{if(prof)notif();if(prof&&document.activeElement.tagName!=='INPU
  if(ios){$('ibt').innerHTML='<b>ثبّت التطبيق على الآيفون</b><br>اضغط زر المشاركة <span style="font-size:18px">⬆️</span> ثم «إضافة إلى الشاشة الرئيسية».';setTimeout(show,3000)}
 })();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+/* ===== الإعدادات ===== */
+function openSettings(){if(!prof)return;const p=$('setpage');p.hidden=false;p.scrollTop=0;renderSettings()}
+function closeSettings(){const p=$("setpage");p.hidden=true}
+function init2(){$('me').textContent=prof?prof.name:''}
+async function renderSettings(){
+ const b=$('setbody');if(!b)return;
+ const joined=prof.created_at?new Date(prof.created_at).toLocaleDateString('ar-EG',{year:'numeric',month:'long'}):'';
+ b.innerHTML=`
+ <section class="card setcard">
+  <h4>👤 الحساب</h4>
+  <div class="ph"><div class="av">${esc((prof.name||'?')[0])}</div><div><b>${esc(prof.name||'')}</b><small>@${esc(prof.username||'')}${joined?' · عضو من '+esc(joined):''}</small></div></div>
+  <label>الاسم اللي بيظهر للناس<input id="stn" maxlength="40" value="${esc(prof.name||'')}"></label>
+  <label>المنطقة<select id="sta">${AREAS.map(a=>`<option ${a===prof.area?'selected':''}>${esc(a)}</option>`).join('')}</select></label>
+  <label>نبذة عنك<input id="stb" maxlength="200" placeholder="مثال: من الأقصر، بحب الكورة" value="${esc(prof.bio||'')}"></label>
+  <button class="btn" id="stsv">حفظ التغييرات</button>
+  <div id="stmsg"></div>
+ </section>
+
+ <section class="card setcard">
+  <h4>🔒 الأمان</h4>
+  <div class="setnote">بتدخل باسم المستخدم <b>@${esc(prof.username||'')}</b> — الاسم ده ثابت ومش بيتغير.</div>
+  <label>الرقم السري الحالي<input type="password" id="stp0" maxlength="40" dir="ltr" placeholder="الرقم اللي بتدخل بيه"></label>
+  <label>رقم سري جديد<input type="password" id="stp1" maxlength="40" dir="ltr" placeholder="6 خانات على الأقل"></label>
+  <label>تأكيد الرقم السري<input type="password" id="stp2" maxlength="40" dir="ltr" placeholder="اكتبه تاني"></label>
+  <button class="btn" id="stpw">تغيير الرقم السري</button>
+  <div id="stpmsg"></div>
+  <button class="lnk" id="stout">🚪 تسجيل الخروج</button>
+ </section>
+
+ <section class="card setcard">
+  <h4>🔔 الإشعارات</h4>
+  <div id="pushbox" class="rpn"></div>
+  <div class="setnote">جرس 🔔 فوق بيوريك أي تفاعل على منشوراتك وتعليقاتك، ولما الإدارة توافق على منشورك أو خدمتك أو ترفضها.</div>
+ </section>
+
+ <section class="card setcard">
+  <h4>🎨 المظهر</h4>
+  <div class="swrow"><span>الوضع الليلي</span><button class="sw ${document.body.classList.contains('dark')?'on':''}" id="stsw" role="switch" aria-label="الوضع الليلي"></button></div>
+ </section>
+
+ <section class="card setcard">
+  <h4>🛡️ الخصوصية</h4>
+  <div class="setpriv" id="stpriv"><div class="setnote">بيتم التحميل…</div></div>
+  <button class="lnk" id="stunhide">🙈 إظهار المنشورات اللي أخفيتها (${hid.size})</button>
+ </section>
+
+ <section class="card setcard">
+  <h4>ℹ️ عن المنصة</h4>
+  <button class="lnk" onclick="location.href='terms.html'">📜 الشروط والقواعد</button>
+  <button class="lnk" onclick="location.href='services.html'">🛠️ دليل الخدمات العام</button>
+  <button class="lnk" id="stref">🔄 تحديث الصفحة (لو الشكل قديم)</button>
+  <div class="setver">أهل الأقصر · الإصدار 1.4</div>
+ </section>`;
+
+ $('stsv').onclick=async()=>{
+  const n=$('stn').value.trim(),a=$('sta').value,bio=$('stb').value.trim(),m=$('stmsg');
+  if(n.length<2)return m.innerHTML='<div class="setbad">اكتب اسمك (حرفين على الأقل)</div>';
+  const r=await sb.from('profiles').update({name:n,area:a,bio:bio||null}).eq('id',me.id);
+  if(r.error)return m.innerHTML='<div class="setbad">تعذر الحفظ: '+esc(r.error.message)+'</div>';
+  prof.name=n;prof.area=a;prof.bio=bio||null;
+  $('me').textContent=n;m.innerHTML='<div class="setok">✅ اتحدّثت بياناتك</div>';
+  render();
+ };
+ $('stpw').onclick=async()=>{
+  const cur=$('stp0').value,a=$('stp1').value,b2=$('stp2').value,m=$('stpmsg');
+  if(!cur)return m.innerHTML='<div class="setbad">اكتب رقمك السري الحالي</div>';
+  if(a.length<6)return m.innerHTML='<div class="setbad">الرقم السري الجديد لازم 6 خانات على الأقل</div>';
+  if(a!==b2)return m.innerHTML='<div class="setbad">الرقمين مش زي بعض</div>';
+  const chk=await sb.auth.signInWithPassword({email:prof.username+DOM,password:cur});
+  if(chk.error)return m.innerHTML='<div class="setbad">الرقم السري الحالي غلط</div>';
+  if(!myPriv){try{await unlockKeys(cur)}catch(_){}}
+  const r=await sb.auth.updateUser({password:a});
+  if(r.error)return m.innerHTML='<div class="setbad">تعذر التغيير: '+esc(r.error.message)+'</div>';
+  let kw='';
+  if(myPriv){try{await rewrapKeys(a);kw=' ومفتاح الرسائل اتحدّث'}catch(_){kw=' (ملحوظة: مفتاح الرسائل محتاج يتفتح تاني)'}}
+  $('stp0').value='';$('stp1').value='';$('stp2').value='';m.innerHTML='<div class="setok">✅ اتغير الرقم السري'+kw+'</div>';
+ };
+ $('stout').onclick=async()=>{if(!confirm('تسجيل الخروج من الحساب؟'))return;await sb.auth.signOut();closeSettings();$('setpage').hidden=true;init()};
+ $('stsw').onclick=()=>{const d=document.body.classList.toggle('dark');localStorage.dark=d?'1':'0';$('stsw').classList.toggle('on',d);$('dk').textContent=d?'☀️':'🌙'};
+ $('stunhide').onclick=async()=>{if(!hid.size)return alert('مفيش منشورات مخفية');await sb.from('hidden_posts').delete().eq('user_id',me.id);hid.clear();renderSettings();alert('رجعت المنشورات المخفية')};
+ $('stref').onclick=()=>location.reload();
+ pushBox();
+ const ids=[...blk.keys()],pv=$('stpriv');
+ if(!ids.length){pv.innerHTML='<div class="setnote">مفيش أعضاء محظورين أو مكتومين.</div>';return}
+ const r=await sb.from('profiles').select('id,name').in('id',ids);
+ const nm=Object.fromEntries((r.data||[]).map(x=>[x.id,x.name]));
+ pv.innerHTML=ids.map(i=>`<div class="cm">${esc(nm[i]||'عضو')} <small>(${blk.get(i)==='mute'?'مكتوم':'محظور'})</small> <button class="ghost" data-sub="${i}">إلغاء</button></div>`).join('');
+ pv.onclick=async e=>{const x=e.target.closest('[data-sub]');if(!x)return;await sb.from('user_blocks').delete().match({user_id:me.id,target_id:x.dataset.sub});blk.delete(x.dataset.sub);render();renderSettings()};
+}
+/* ================= الرسائل الخاصة المشفرة (طرفين بس) ================= */
+const B64={e:b=>btoa(String.fromCharCode.apply(null,new Uint8Array(b))),d:s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0))};
+const TE=new TextEncoder(),TD=new TextDecoder();
+let myPriv=null,myPub=null,pubCache={},threads=[],chatWith=null,chatName='',chatTimer=null,msgBusy=false,pendingPw=null;
+const PBKDF2_ITER=150000;
+
+async function kekFrom(pw,saltB64){
+ const km=await crypto.subtle.importKey('raw',TE.encode(pw),'PBKDF2',false,['deriveKey']);
+ return crypto.subtle.deriveKey({name:'PBKDF2',salt:B64.d(saltB64),iterations:PBKDF2_ITER,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function privRow(){const r=await sb.from('user_priv').select('enc,iv,salt').eq('user_id',me.id).maybeSingle();return r.data||null}
+async function createKeys(pw){
+ const kp=await crypto.subtle.generateKey({name:'ECDH',namedCurve:'P-256'},true,['deriveKey']);
+ const pub=await crypto.subtle.exportKey('jwk',kp.publicKey),priv=await crypto.subtle.exportKey('jwk',kp.privateKey);
+ const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+ const kek=await kekFrom(pw,B64.e(salt));
+ const enc=await crypto.subtle.encrypt({name:'AES-GCM',iv},kek,TE.encode(JSON.stringify(priv)));
+ const pk={kty:'EC',crv:'P-256',x:pub.x,y:pub.y};
+ const up=await sb.from('profiles').update({pub_key:pk}).eq('id',me.id);
+ const ins=await sb.from('user_priv').upsert({user_id:me.id,enc:B64.e(enc),iv:B64.e(iv),salt:B64.e(salt),updated_at:new Date().toISOString()});
+ if(up.error||ins.error)throw new Error((up.error||ins.error).message);
+ myPriv=kp.privateKey;myPub=pk;pubCache[me.id]=pk;return true;
+}
+async function unlockKeys(pw){
+ if(!me)return false;
+ const row=await privRow();
+ if(!row)return createKeys(pw);
+ const kek=await kekFrom(pw,row.salt);
+ let jwk;
+ try{jwk=JSON.parse(TD.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:B64.d(row.iv)},kek,B64.d(row.enc))))}catch(_){return false}
+ myPriv=await crypto.subtle.importKey('jwk',jwk,{name:'ECDH',namedCurve:'P-256'},true,['deriveKey']);
+ const p=await sb.from('profiles').select('pub_key').eq('id',me.id).maybeSingle();
+ myPub=(p.data&&p.data.pub_key)||{kty:'EC',crv:'P-256',x:jwk.x,y:jwk.y};
+ pubCache[me.id]=myPub;return true;
+}
+async function rewrapKeys(pw){
+ if(!myPriv)throw new Error('locked');
+ const priv=await crypto.subtle.exportKey('jwk',myPriv);
+ const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+ const kek=await kekFrom(pw,B64.e(salt));
+ const enc=await crypto.subtle.encrypt({name:'AES-GCM',iv},kek,TE.encode(JSON.stringify(priv)));
+ const r=await sb.from('user_priv').upsert({user_id:me.id,enc:B64.e(enc),iv:B64.e(iv),salt:B64.e(salt),updated_at:new Date().toISOString()});
+ if(r.error)throw new Error(r.error.message);
+}
+async function getPub(id){
+ if(pubCache[id])return pubCache[id];
+ const r=await sb.from('profiles').select('pub_key').eq('id',id).maybeSingle();
+ const k=r.data&&r.data.pub_key;if(k)pubCache[id]=k;return k||null;
+}
+async function pairKey(otherPub){
+ const k=await crypto.subtle.importKey('jwk',otherPub,{name:'ECDH',namedCurve:'P-256'},false,[]);
+ return crypto.subtle.deriveKey({name:'ECDH',public:k},myPriv,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function encMsg(otherPub,text){
+ const k=await pairKey(otherPub),iv=crypto.getRandomValues(new Uint8Array(12));
+ const c=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,TE.encode(text));
+ return{cipher:B64.e(c),iv:B64.e(iv)};
+}
+async function decMsg(otherPub,cipher,iv){
+ const k=await pairKey(otherPub);
+ return TD.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:B64.d(iv)},k,B64.d(cipher)));
+}
+async function msgBadge(){
+ if(!prof)return;
+ const r=await sb.from('messages').select('id',{count:'exact',head:true}).eq('recipient_id',me.id).is('read_at',null);
+ const n=r.count||0,b=$('ms');if(!b)return;
+ b.hidden=false;b.innerHTML='💬'+(n?`<span class="badge">${n>99?'99+':n}</span>`:'');
+}
+function openMessages(){if(!prof)return;chatWith=null;$('msgpage').hidden=false;renderMsgPage()}
+function closeMessages(){$('msgpage').hidden=true;if(chatTimer){clearInterval(chatTimer);chatTimer=null}}
+async function openChat(uid){
+ if(!prof)return;if(uid===me.id)return alert('ده حسابك');
+ const p=await sb.from('profiles').select('name').eq('id',uid).maybeSingle();
+ chatWith=uid;chatName=(p.data&&p.data.name)||'عضو';$('msgpage').hidden=false;renderMsgPage();
+}
+async function loadThreads(){
+ const r=await sb.from('messages').select('id,sender_id,recipient_id,cipher,iv,created_at,read_at').or('sender_id.eq.'+me.id+',recipient_id.eq.'+me.id).order('created_at',{ascending:false}).limit(400);
+ if(r.error)throw new Error(r.error.message);
+ const map=new Map();
+ for(const m of (r.data||[])){
+  const other=m.sender_id===me.id?m.recipient_id:m.sender_id;
+  let t=map.get(other);if(!t){t={id:other,last:m,unread:0};map.set(other,t)}
+  if(m.created_at>t.last.created_at)t.last=m;
+  if(m.recipient_id===me.id&&!m.read_at)t.unread++;
+ }
+ threads=[...map.values()].filter(t=>blk.get(t.id)!=='block').sort((a,b)=>a.last.created_at<b.last.created_at?1:-1);
+ const ids=threads.map(t=>t.id);
+ if(ids.length){
+  const p=await sb.from('profiles').select('id,name,pub_key').in('id',ids);
+  const nm=Object.fromEntries((p.data||[]).map(x=>[x.id,x.name]));
+  (p.data||[]).forEach(x=>{if(x.pub_key)pubCache[x.id]=x.pub_key});
+  threads.forEach(t=>t.name=nm[t.id]||'عضو');
+ }
+ for(const t of threads){
+  try{const op=pubCache[t.id];if(op&&myPriv)t.preview=await decMsg(op,t.last.cipher,t.last.iv)}catch(_){t.preview='🔒 رسالة مشفرة'}
+  if(!t.preview)t.preview='🔒 رسالة مشفرة';
+ }
+}
+async function renderMsgPage(){
+ const list=$('msglist'),chat=$('chatbox'),back=$('msgback');
+ if(chatWith){
+  list.hidden=true;chat.hidden=false;$('msgtitle').textContent=chatName||'رسالة';back.textContent='‹ رجوع';
+  await renderChat();
+  if(!chatTimer)chatTimer=setInterval(()=>{if(chatWith&&!$('msgpage').hidden)renderChat()},8000);
+  return;
+ }
+ if(chatTimer){clearInterval(chatTimer);chatTimer=null}
+ chat.hidden=true;list.hidden=false;$('msgtitle').textContent='💬 الرسائل';back.textContent='✕ إغلاق';
+ if(!myPriv){
+  list.innerHTML=`<div class="card lockbox"><b>🔓 افتح الرسائل</b><div class="setnote">الرسائل مشفرة بمفتاح خاص بيك. عشان نفتحه اكتب رقمك السري — المفتاح بيتفك في جهازك بس ومش بيتبعت للسيرفر.</div><input type="password" id="unlockpw" dir="ltr" maxlength="40" placeholder="رقمك السري"><button class="btn" id="unlockgo" style="margin-top:10px;width:100%">فتح الرسائل</button><div id="unlockmsg"></div></div>`;
+  $('unlockgo').onclick=async()=>{
+   const pw=$('unlockpw').value,m=$('unlockmsg');if(!pw)return m.innerHTML='<div class="setbad">اكتب رقمك السري</div>';
+   m.innerHTML='<div class="setnote">جاري الفتح…</div>';
+   let ok=false;try{ok=await unlockKeys(pw)}catch(e){}
+   if(!ok)return m.innerHTML='<div class="setbad">الرقم السري غلط</div>';
+   renderMsgPage();
+  };
+  return;
+ }
+ list.innerHTML='<div class="empty">جاري التحميل…</div>';
+ try{await loadThreads()}catch(e){list.innerHTML='<div class="empty">تعذر التحميل: '+esc(e.message)+'</div>';return}
+ list.innerHTML=threads.length?threads.map(t=>`<div class="thread" data-chat="${t.id}"><div class="av">${esc((t.name||'?')[0])}</div><div class="tx"><b>${esc(t.name)}</b><small>${esc((t.last.sender_id===me.id?'انت: ':'')+t.preview)}</small></div>${t.unread?`<span class="un">${t.unread}</span>`:''}</div>`).join(''):'<div class="empty">مفيش رسائل لسه.<br>افتح حساب أي عضو واضغط «💬 رسالة».</div>';
+}
+async function renderChat(){
+ const log=$('chatlog');if(!log)return;
+ if(!myPriv){log.innerHTML='<div class="lockbox">🔓 افتح الرسائل الأول</div>';return}
+ const other=await getPub(chatWith);
+ const r=await sb.from('messages').select('id,sender_id,recipient_id,cipher,iv,created_at,read_at').or('and(sender_id.eq.'+me.id+',recipient_id.eq.'+chatWith+'),and(sender_id.eq.'+chatWith+',recipient_id.eq.'+me.id+')').order('created_at',{ascending:true}).limit(300);
+ if(r.error){log.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
+ const rows=r.data||[],out=[];
+ for(const m of rows){
+  let txt='🔒 (مش قادر يفك التشفير)';
+  try{if(other)txt=await decMsg(other,m.cipher,m.iv)}catch(_){}
+  const t=new Date(m.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  out.push(`<div class="bub ${m.sender_id===me.id?'me':'you'}">${esc(txt)}<small>${t}${m.sender_id!==me.id?` <button class="rpb" data-rm="${m.id}" data-body="${esc(txt)}" data-snd="${m.sender_id}">🚩</button>`:''}</small></div>`);
+ }
+ log.innerHTML=out.length?out.join(''):'<div class="empty">ابدأ المحادثة بأول رسالة 👋</div>';
+ log.scrollTop=log.scrollHeight;
+ sb.from('messages').update({read_at:new Date().toISOString()}).eq('recipient_id',me.id).eq('sender_id',chatWith).is('read_at',null).then(()=>msgBadge());
+}
+async function sendMsg(){
+ const i=$('msgin');if(!i)return;
+ const t=i.value.trim();if(!t||!chatWith||msgBusy)return;
+ if(blk.get(chatWith)==='block')return alert('انت حاظر العضو ده. الغي الحظر من الإعدادات الأول.');
+ if(!myPriv)return alert('افتح الرسائل الأول برقمك السري');
+ const other=await getPub(chatWith);
+ if(!other)return alert('العضو ده لسه مفتحش الرسائل، مش هينفع توصله رسالة مشفرة دلوقتي.');
+ msgBusy=true;i.value='';
+ try{
+  const c=await encMsg(other,t);
+  const r=await sb.from('messages').insert({sender_id:me.id,recipient_id:chatWith,cipher:c.cipher,iv:c.iv});
+  if(r.error){i.value=t;alert('تعذر الإرسال: '+r.error.message);return}
+  await renderChat();
+ }catch(e){i.value=t;alert('تعذر التشفير: '+e.message)}
+ finally{msgBusy=false}
+}
+async function reportMsg(id,body,sender){
+ askReason(async reason=>{
+  $('modal').hidden=true;
+  const r=await sb.from('message_reports').insert({message_id:id,reporter_id:me.id,sender_id:sender,body_snapshot:body,reason});
+  alert(r.error?'خطأ: '+r.error.message:'تم الإبلاغ. الإدارة هتراجع الرسالة.');
+ });
+}
+$('msgback').onclick=()=>{if(chatWith){chatWith=null;renderMsgPage()}else closeMessages()};
+$('msgsend').onclick=()=>sendMsg();
+$('msgin').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendMsg()}});
+$('msgpage').onclick=e=>{
+ const t=e.target.closest('[data-chat]');if(t){openChat(t.dataset.chat);return}
+ const b=e.target.closest('[data-rm]');if(b){reportMsg(b.dataset.rm,b.dataset.body,b.dataset.snd);return}
+};
 init();
 
 /* سلسلة الزيارات اليومية — بتشجع العضو يرجع كل يوم */
