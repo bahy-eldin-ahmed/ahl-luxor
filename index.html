@@ -31,6 +31,8 @@ a{color:var(--c2)}
 header{background:linear-gradient(115deg,#08322F 0%,#0B5A54 48%,#12968A 100%);color:#fff;padding:9px 14px;position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;justify-content:space-between;box-shadow:0 4px 18px rgba(8,50,47,.22)}
 header h1{margin:0;font-size:19px;font-weight:800;letter-spacing:-.2px}
 header button{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:999px;padding:7px 11px;cursor:pointer;font:inherit;font-size:13px;transition:background .15s,transform .1s}
+header button{position:relative}
+header button .badge{position:absolute;top:-5px;inset-inline-start:-6px;margin:0;font-size:10px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 header button:hover{background:rgba(255,255,255,.26)}
 header button:active{transform:scale(.95)}
 .brand{display:flex;align-items:center;gap:9px}
@@ -94,6 +96,22 @@ body.dark .tag{background:#12332E;color:#8FE0D3}
 .sv .ph b{font-size:16px}
 #sfa{max-width:260px}
 .nm{cursor:pointer;text-decoration:underline dotted}
+@media(max-width:640px){
+ header{flex-wrap:wrap;row-gap:7px;padding:8px 10px;gap:8px}
+ header h1{font-size:16px;white-space:nowrap}
+ header .srch{order:9;flex-basis:100%;max-width:none}
+ #ms,#st{display:none}
+ header>div:last-of-type{margin-inline-start:auto;display:flex;gap:4px;align-items:center}
+ #me{max-width:104px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+@media(max-width:640px){
+ header{flex-wrap:wrap;row-gap:7px;padding:8px 10px;gap:8px}
+ header h1{font-size:16px;white-space:nowrap}
+ header .srch{order:9;flex-basis:100%;max-width:none}
+ #ms,#st{display:none}
+ header>div:last-of-type{margin-inline-start:auto;display:flex;gap:4px;align-items:center}
+ #me{max-width:104px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
 @media(max-width:420px){header h1{font-size:17px}header button{padding:6px 9px;font-size:12px}main{padding:8px}}
 .layout{display:grid;grid-template-columns:minmax(0,1fr);width:100%;max-width:1100px;margin:0 auto}
 #side{display:none}
@@ -111,8 +129,8 @@ body.dark .tag{background:#12332E;color:#8FE0D3}
 .story.on i{box-shadow:0 0 0 2.5px var(--c3),0 2px 8px rgba(9,38,34,.18)}
 .story.on{color:var(--c2)}
 #bnav{position:fixed;bottom:0;inset-inline:0;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--l);display:flex;justify-content:space-around;z-index:6;padding:6px 0 calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 18px rgba(9,38,34,.06)}
-#bnav button{background:none;border:0;font:inherit;font-size:11px;color:var(--m);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;position:relative;padding:2px 10px;border-radius:12px;transition:color .15s}
-#bnav button span{font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;width:46px;height:27px;border-radius:999px;transition:background .18s,transform .18s}
+#bnav button{background:none;border:0;font:inherit;font-size:10.5px;color:var(--m);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;position:relative;padding:2px 6px;border-radius:12px;transition:color .15s}
+#bnav button span{font-size:19px;line-height:1;display:flex;align-items:center;justify-content:center;width:40px;height:26px;border-radius:999px;transition:background .18s,transform .18s}
 #bnav button.on{color:var(--c);font-weight:800}
 #bnav button.on span{background:rgba(15,118,110,.12);transform:translateY(-1px)}
 #bnav .badge{position:absolute;top:-2px;inset-inline-start:2px}
@@ -159,6 +177,20 @@ body.dark .stt.rj{background:#2A1319;border-color:#4A2029;color:#F7B8C3}
 .filebtn:hover{border-color:var(--c3);color:var(--c2)}
 .wel{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:2px 0 0}
 .wel span{background:var(--card);border:1px solid var(--l);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--m);box-shadow:var(--sh)}
+
+/* ===== شريط الأقسام الظاهر ===== */
+#secbar{position:sticky;top:var(--hh,52px);z-index:4;display:flex;gap:6px;overflow-x:auto;padding:7px 10px;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--l);box-shadow:0 3px 12px rgba(9,38,34,.06);scrollbar-width:none}
+#secbar::-webkit-scrollbar{display:none}
+#secbar[hidden]{display:none}
+#secbar button{flex:none;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--l);background:var(--card);color:var(--t);border-radius:999px;padding:6px 12px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;position:relative;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+#secbar button .ic{font-size:15px;line-height:1}
+#secbar button.on{background:linear-gradient(120deg,var(--c3),var(--c));color:#fff;border-color:var(--c);box-shadow:0 3px 10px rgba(15,118,110,.25)}
+#secbar .badge{position:absolute;top:-7px;inset-inline-end:-5px;margin:0;font-size:10px}
+body.dark #secbar{background:rgba(16,29,26,.96)}
+@media(min-width:900px){#secbar{display:none}}
+.pacts{margin-top:12px}
+.pacts .btn{flex:1;min-width:130px}
+.pacts .ghost{border:1px solid var(--l)}
 
 /* ===== صفحة الإعدادات ===== */
 #setpage{position:fixed;inset:0;z-index:30;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:34px}
@@ -216,6 +248,7 @@ body.dark .stt.rj{background:#2A1319;border-color:#4A2029;color:#F7B8C3}
 </head>
 <body><noscript><h1>أهل الأقصر</h1><p>منصة مجانية بتجمع شباب وأهالي الأقصر: منشورات، وظائف، خدمات، فعاليات، أخبار، بيع وشراء وريلز. فعّل JavaScript عشان تستخدم المنصة.</p><p><a href="terms.html">الشروط والقواعد</a></p></noscript>
 <header><div class="brand"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lgo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#12968A"/><stop offset="1" stop-color="#08322F"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#lgo)"/><circle cx="32" cy="22" r="7.5" fill="#E7B15C"/><rect x="15" y="29" width="6" height="19" rx="2" fill="#EAF6F3"/><rect x="29" y="29" width="6" height="19" rx="2" fill="#EAF6F3"/><rect x="43" y="29" width="6" height="19" rx="2" fill="#EAF6F3"/><path d="M10 52h44" stroke="#7FD8CC" stroke-width="3" stroke-linecap="round"/><path d="M14 57.5q6-4 12 0t12 0 12 0" stroke="#7FD8CC" stroke-width="2" fill="none" opacity=".6"/></svg><h1>أهل الأقصر</h1></div><input class="srch" id="q" placeholder="🔍 ابحث في المنصة"><div><button id="dk" title="الوضع الليلي">🌙</button> <button id="ms" title="الرسائل" hidden>💬</button> <button id="st" title="الإعدادات" hidden>⚙️</button> <button id="nt" hidden>🔔</button> <button id="adm" hidden>البلاغات</button> <button id="me" hidden></button></div></header>
+<div id="secbar" hidden></div>
 <div class="layout"><aside id="side"></aside>
 <main>
 <div id="auth" class="card" hidden><div class="herobox"><svg class="hero" viewBox="0 0 800 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#04211E"/><stop offset=".58" stop-color="#0A4E48"/><stop offset="1" stop-color="#12968A"/></linearGradient><linearGradient id="riv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E7F75"/><stop offset="1" stop-color="#052C29"/></linearGradient><radialGradient id="sung" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFD98A"/><stop offset="1" stop-color="#DFA43C"/></radialGradient><radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#DFA43C" stop-opacity=".5"/><stop offset="1" stop-color="#DFA43C" stop-opacity="0"/></radialGradient></defs><rect width="800" height="220" fill="url(#sky)"/><circle cx="596" cy="92" r="118" fill="url(#glow)"/><circle cx="596" cy="92" r="33" fill="url(#sung)"/><g fill="#F4E7C8" opacity=".8"><circle cx="118" cy="34" r="1.8"/><circle cx="212" cy="22" r="1.4"/><circle cx="330" cy="40" r="1.6"/><circle cx="432" cy="20" r="1.3"/><circle cx="502" cy="48" r="1.5"/><circle cx="700" cy="28" r="1.6"/><circle cx="760" cy="54" r="1.3"/></g><g fill="#062B27" opacity=".94"><path d="M96 152l16-96 16 96z"/><path d="M110 56l2-14 2 14z"/><rect x="230" y="86" width="15" height="66" rx="2"/><rect x="264" y="86" width="15" height="66" rx="2"/><rect x="298" y="86" width="15" height="66" rx="2"/><rect x="332" y="86" width="15" height="66" rx="2"/><rect x="366" y="86" width="15" height="66" rx="2"/><rect x="220" y="76" width="172" height="12" rx="2"/><rect x="214" y="68" width="184" height="8" rx="2"/><rect x="640" y="104" width="13" height="48" rx="2"/><rect x="670" y="104" width="13" height="48" rx="2"/><rect x="700" y="104" width="13" height="48" rx="2"/><rect x="630" y="96" width="96" height="10" rx="2"/></g><rect y="152" width="800" height="68" fill="url(#riv)"/><path d="M0 168q50-12 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0" fill="none" stroke="#5FD6C8" stroke-width="2.5" opacity=".45"/><path d="M0 190q50-12 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0" fill="none" stroke="#DFA43C" stroke-width="2" opacity=".26"/><path d="M462 92q10-8 20 0M494 106q8-7 16 0" stroke="#04211E" stroke-width="2" fill="none" opacity=".45"/></svg><div class="tt"><b>منصة أهل الأقصر</b><span>مكان واحد يجمع كل أهل الأقصر</span></div></div>
@@ -242,7 +275,7 @@ body.dark .stt.rj{background:#2A1319;border-color:#4A2029;color:#F7B8C3}
   <div class="row"><select id="cat" style="width:auto"></select><label class="filebtn"><span>📷 صورة أو فيديو</span><input type="file" id="img" accept="image/*,video/mp4,video/webm,video/quicktime" hidden></label><button class="btn" id="pub">نشر</button></div>
  </div>
  <div class="up" id="uphint">كل منشور وريل بيتراجع من الإدارة قبل ما يظهر للناس، والمنشورات السياسية أو الحساسة بتترفض. صورة أو فيديو قصير: بحد أقصى 30 ثانية (الفيديو بيتصغر تلقائي قبل الرفع).</div>
- <div class="chips" id="chips"></div><div class="reelbar" id="reelbar" hidden>🎬 ريلز · فيديوهات قصيرة من أهل الأقصر</div>
+ <div class="reelbar" id="reelbar" hidden>🎬 ريلز · فيديوهات قصيرة من أهل الأقصر</div>
  <div class="card filters" id="pfilters"><select id="fa"><option value="">كل المناطق</option></select><button class="ghost" id="rf">تحديث</button></div>
  <div id="feed"></div>
  <div id="msgpage" hidden>
@@ -251,7 +284,7 @@ body.dark .stt.rj{background:#2A1319;border-color:#4A2029;color:#F7B8C3}
   <div id="msglist"></div>
   <div id="chatbox" hidden>
    <div id="chatlog"></div>
-   <div class="chatfoot"><input id="msgin" maxlength="2000" placeholder="اكتب رسالة…"><button class="btn" id="msgsend">إرسال</button></div>
+   <div class="chatfoot" id="chatfoot"><input id="msgin" maxlength="2000" placeholder="اكتب رسالة…"><button class="btn" id="msgsend">إرسال</button></div>
   </div>
  </div>
  <div id="setpage" hidden>
@@ -285,7 +318,8 @@ const ICONS={'الكل':'🏠','عام':'💬','وظائف':'💼','خدمات':
 function menu(){
  const it=(k,ic,lb,on)=>`<button class="${on?'on':''}" ${k}><span class="ic">${ic}</span>${lb}</button>`;
  $('side').innerHTML='<h4>الأقسام</h4>'+it('data-v="home" data-cf=""','🏠','الرئيسية',view==='home'&&!cf)+it('data-msg="1"','💬','الرسائل',false)+it('data-v="services"','🛠️','دليل الخدمات',view==='services')+it('data-v="myservices"','📋','خدماتي',view==='myservices')+it('data-v="reels"','🎬','ريلز',view==='reels')+it('data-v="following"','👥','المتابَعين',view==='following')+it('data-v="saved"','🔖','المحفوظات',view==='saved')+['عام','وظائف','خدمات','فعاليات','أخبار','بيع وشراء','أسئلة'].map(c=>it(`data-v="home" data-cf="${c}"`,ICONS[c],c,view==='home'&&cf===c)).join('')+'<h4>المنصة</h4><button data-set="1"><span class="ic">⚙️</span>الإعدادات</button><button onclick="location.href=\'services.html\'"><span class="ic">🛠️</span>دليل الخدمات العام</button><button onclick="location.href=\'terms.html\'"><span class="ic">📜</span>الشروط والقواعد</button>';
- $('bnav').innerHTML=[['home','🏠','الرئيسية'],['services','🛠️','خدمات'],['post','➕','نشر'],['reels','🎬','ريلز'],['me2','👤','حسابي']].map(([k,ic,lb])=>`<button data-n="${k}" class="${(k==='home'&&view==='home')||(k==='reels'&&view==='reels')||(k==='services'&&(view==='services'||view==='myservices'))?'on':''}"><span>${ic}</span>${lb}</button>`).join('');
+ $('bnav').innerHTML=[['home','🏠','الرئيسية'],['services','🛠️','خدمات'],['post','➕','نشر'],['reels','🎬','ريلز'],['msgs','💬','الرسائل'],['me2','👤','حسابي']].map(([k,ic,lb])=>`<button data-n="${k}" class="${(k==='home'&&view==='home')||(k==='reels'&&view==='reels')||(k==='services'&&(view==='services'||view==='myservices'))||(k==='msgs'&&!$('msgpage').hidden)?'on':''}"><span>${ic}</span>${lb}</button>`).join('');
+ applyMsgBadges();
  $('stories').innerHTML=Object.keys(AREA_GROUPS).map(g=>`<button class="story ${fg===g?'on':''}" data-g="${g}"><i>${g[0]}</i>${g}</button>`).join('');
  $('reelbar').hidden=view!=='reels';$('feed').className=view==='reels'?'reels':'';
 }
@@ -293,10 +327,33 @@ $('side').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.datas
 $('bnav').onclick=e=>{const b=e.target.closest('button');if(!b)return;const k=b.dataset.n;
  if(k==='home'||k==='reels'||k==='services'){view=k;cf='';if(k!=='services'){svCat='';svArea=''}chips();menu();render();window.scrollTo(0,0)}
  else if(k==='post'){view='home';menu();render();$('tx').scrollIntoView({behavior:'smooth',block:'center'});$('tx').focus()}
+ else if(k==='msgs')openMessages();
  else if(k==='nt2')$('nt').click();else if(k==='me2')$('me').click()};
 $('stories').onclick=e=>{const b=e.target.closest('button');if(!b)return;fg=fg===b.dataset.g?'':b.dataset.g;menu();render()};
-function chips(){$('chips').innerHTML=['الكل',...CATS].map(c=>`<button class="chip ${(c==='الكل'?'':c)===cf?'on':''}" data-cf="${c==='الكل'?'':c}">${c}</button>`).join('')}
-$('chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;cf=b.dataset.cf;chips();menu();render()};chips();
+var msgUnread=0;
+const SECS=[['home','🏠','الرئيسية'],['وظائف','💼','وظائف'],['services','🛠️','خدمات'],['reels','🎬','ريلز'],['فعاليات','🎉','فعاليات'],['أخبار','📰','أخبار'],['بيع وشراء','🛒','بيع وشراء'],['أسئلة','❓','أسئلة'],['msgs','💬','الرسائل'],['following','👥','متابَعين'],['saved','🔖','محفوظات']];
+function secOn(k){
+ if(k==='home')return view==='home'&&!cf;
+ if(k==='services')return view==='services'||view==='myservices';
+ if(k==='reels')return view==='reels';
+ if(k==='msgs')return !$('msgpage').hidden;
+ if(k==='following')return view==='following';
+ if(k==='saved')return view==='saved';
+ return view==='home'&&cf===k;
+}
+function chips(){
+ const el=$('secbar');if(!el)return;
+ el.innerHTML=SECS.map(([k,ic,lb])=>`<button data-s="${k}" class="${secOn(k)?'on':''}"><span class="ic">${ic}</span>${lb}</button>`).join('');
+ applyMsgBadges();
+}
+$('secbar').onclick=e=>{const b=e.target.closest('button');if(!b)return;const k=b.dataset.s;if(!k)return;
+ if(k==='msgs')return openMessages();
+ if(k==='services'||k==='reels'||k==='following'||k==='saved'){view=k;cf='';if(k!=='services'){svCat='';svArea=''}}
+ else{view='home';cf=k==='home'?'':k}
+ chips();menu();render();window.scrollTo(0,0)};
+chips();
+function setHH(){const h=document.querySelector('header');if(h)document.documentElement.style.setProperty('--hh',h.offsetHeight+'px')}
+addEventListener('resize',setHH);setTimeout(setHH,0);setHH();
 if(localStorage.dark==='1')document.body.classList.add('dark');
 $('dk').onclick=()=>{const d=document.body.classList.toggle('dark');localStorage.dark=d?'1':'0';$('dk').textContent=d?'☀️':'🌙'};
 $('dk').textContent=document.body.classList.contains('dark')?'☀️':'🌙';
@@ -327,7 +384,7 @@ async function init(){
  const {data}=await sb.auth.getSession();me=data.session?.user||null;
  if(me){const r=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle();prof=r.data}
  else prof=null;
- $('auth').hidden=!!prof;$('app').hidden=!prof;$('bnav').hidden=!prof;$('side').style.visibility=prof?'visible':'hidden';$('me').hidden=!prof;$('st').hidden=!prof;$('ms').hidden=!prof;$('adm').hidden=!(prof&&prof.is_admin);
+ $('auth').hidden=!!prof;$('app').hidden=!prof;$('bnav').hidden=!prof;$('side').style.visibility=prof?'visible':'hidden';$('me').hidden=!prof;$('st').hidden=!prof;$('ms').hidden=!prof;$('adm').hidden=!(prof&&prof.is_admin);$('secbar').hidden=!prof;setHH();
  if(prof){$('me').textContent=prof.name;await loadMine();await loadServices();load();svJump();notif();msgBadge();if(pendingPw){const _pw=pendingPw;pendingPw=null;try{await unlockKeys(_pw)}catch(_){}}}
 }
 async function loadMine(){
@@ -349,7 +406,7 @@ function rxSum(p){if(!p.likes.length)return '';const c={};p.likes.forEach(l=>c[l
 async function share(id){const p=posts.find(x=>x.id===id),u=location.origin+location.pathname+'#p='+id,t=(p.body||'منشور على أهل الأقصر').slice(0,100);if(navigator.share){try{await navigator.share({title:'أهل الأقصر',text:t,url:u})}catch(_){}return}const m=$('modal');m.hidden=false;m.innerHTML='<b>مشاركة المنشور</b> <button class="ghost" id="cl">إغلاق</button><a class="chip" style="display:block;margin-top:8px" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(t+' '+u)+'">واتساب</a><a class="chip" style="display:block;margin-top:6px" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(u)+'">فيسبوك</a><a class="chip" style="display:block;margin-top:6px" target="_blank" rel="noopener" href="https://t.me/share/url?url='+encodeURIComponent(u)+'&text='+encodeURIComponent(t)+'">تيليجرام</a><button class="chip" style="display:block;width:100%;margin-top:6px" id="cpl">نسخ الرابط</button>';$('cpl').onclick=async()=>{try{await navigator.clipboard.writeText(u);alert('تم نسخ الرابط')}catch(_){prompt('انسخ الرابط:',u)}}}
 function render(){
  if(view==='services'||view==='myservices')return renderServices();
- $('composer').hidden=false;$('chips').hidden=false;$('pfilters').hidden=false;$('stories').hidden=false;$('uphint').hidden=false;
+ $('composer').hidden=false;$('pfilters').hidden=false;$('stories').hidden=false;$('uphint').hidden=false;
  const q=$('q').value.trim(),fa=$('fa').value;
  const list=posts.filter(p=>(p.status==='approved'||p.user_id===me.id)&&!blk.has(p.user_id)&&(view==='saved'?sav.has(p.id):!hid.has(p.id))&&(view!=='reels'||p.video)&&(view!=='following'||fol.has(p.user_id))&&(!cf||p.category===cf)&&(!fa||p.profiles?.area===fa)&&(!fg||AREA_GROUPS[fg].includes(p.profiles?.area))&&(!q||((p.body||'')+(p.profiles?.name||'')).includes(q)));
  menu();setTimeout(()=>document.querySelectorAll('#feed video').forEach(v=>io.observe(v)),0);
@@ -379,7 +436,7 @@ function svCard(s){
  <div class="acts">${ph?`<a class="chip" href="tel:${esc(ph)}">📞 اتصال</a>`:''}${wa?`<a class="chip" target="_blank" rel="noopener" href="https://wa.me/${waNum(wa)}?text=${encodeURIComponent('السلام عليكم، وصلت لخدمتك «'+s.title+'» من منصة أهل الأقصر')}">💬 واتساب</a>`:''}<button class="ghost" data-ssh="${s.id}">↗️ مشاركة</button>${mine?`<button class="ghost" data-sve="${s.id}">✏️ تعديل</button><button class="ghost" data-svd="${s.id}">🗑️ حذف</button>`:''}</div></div>`;
 }
 function renderServices(){
- $('composer').hidden=true;$('chips').hidden=true;$('pfilters').hidden=true;$('reelbar').hidden=true;$('stories').hidden=true;$('uphint').hidden=true;
+ $('composer').hidden=true;$('pfilters').hidden=true;$('reelbar').hidden=true;$('stories').hidden=true;$('uphint').hidden=true;
  const q=$('q').value.trim();
  const mineList=svcs.filter(s=>s.user_id===me.id);
  const list=svcs.filter(s=>s.status==='approved'||s.user_id===me.id||prof.is_admin)
@@ -556,9 +613,10 @@ async function showProfile(id){
  const [p,c]=await Promise.all([sb.from('profiles').select('name,area,bio,created_at,username').eq('id',id).maybeSingle(),sb.from('posts').select('id',{count:'exact',head:true}).eq('user_id',id)]);
  if(!p.data){m.innerHTML='غير موجود';return}
  const x=p.data,mine=id===me.id;
- m.innerHTML=`<div class="ph"><div class="av">${esc(x.name[0])}</div><div><b>${esc(x.name)}</b><small>${esc(x.area)} · @${esc(x.username)}</small></div></div><p>${esc(x.bio||(mine?'أضف نبذة عنك':'مفيش نبذة'))}</p><small>${c.count||0} منشور · عضو من ${new Date(x.created_at).toLocaleDateString('ar-EG')}</small>${mine?'<div class="row"><input id="bio" maxlength="200" placeholder="نبذة عنك (200 حرف)" value="'+esc(x.bio||'')+'"><button class="btn" id="sbio">حفظ</button></div>':''}<div class="row"><button class="ghost" id="cl">إغلاق</button>${mine?'<button class="ghost" id="svw">🔖 المحفوظات</button><button class="ghost" id="gs">⚙️ الإعدادات</button>'+(mine?'':'<button class="ghost" id="dm" data-u="'+id+'">💬 رسالة</button>')+'<button class="ghost" id="ps">🛡️ الخصوصية والحظر</button><button class="ghost" id="lo">تسجيل خروج</button>':''}</div>`;
+ m.innerHTML=`<div class="ph"><div class="av">${esc(x.name[0])}</div><div><b>${esc(x.name)}</b><small>${esc(x.area)} · @${esc(x.username)}</small></div></div><p>${esc(x.bio||(mine?'أضف نبذة عنك':'مفيش نبذة'))}</p><small>${c.count||0} منشور · عضو من ${new Date(x.created_at).toLocaleDateString('ar-EG')}</small>${mine?'<div class="row"><input id="bio" maxlength="200" placeholder="نبذة عنك (200 حرف)" value="'+esc(x.bio||'')+'"><button class="btn" id="sbio">حفظ</button></div>':''}<div class="row pacts">${mine?'':'<button class="btn" id="dm" data-u="'+id+'">💬 رسالة</button><button class="ghost" id="pf" data-u="'+id+'">'+(fol.has(id)?'✓ متابَع':'➕ متابعة')+'</button>'}<button class="ghost" id="cl">إغلاق</button>${mine?'<button class="ghost" id="svw">🔖 المحفوظات</button><button class="ghost" id="gs">⚙️ الإعدادات</button><button class="ghost" id="ps">🛡️ الخصوصية والحظر</button><button class="ghost" id="lo">تسجيل خروج</button>':''}</div>`;
  if(mine)$('lo').onclick=async()=>{await sb.auth.signOut();$('modal').hidden=true;init()};
  if(mine)$('sbio').onclick=async()=>{const r=await sb.from('profiles').update({bio:$('bio').value.trim()}).eq('id',me.id);if(r.error)alert('خطأ: '+r.error.message);else showProfile(id)};
+ if(!mine){const pb=$('pf');if(pb)pb.onclick=async()=>{const was=fol.has(id);const r=was?await sb.from('follows').delete().match({follower_id:me.id,followee_id:id}):await sb.from('follows').insert({follower_id:me.id,followee_id:id});if(r.error)return alert('خطأ: '+r.error.message);was?fol.delete(id):fol.add(id);showProfile(id);render()}}
 }
 $('me').onclick=()=>showProfile(me.id);
 $('st').onclick=()=>openSettings();
@@ -767,11 +825,19 @@ async function decMsg(otherPub,cipher,iv){
  const k=await pairKey(otherPub);
  return TD.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:B64.d(iv)},k,B64.d(cipher)));
 }
+function applyMsgBadges(){
+ const n=msgUnread||0,html='💬'+(n?`<span class="badge">${n>99?'99+':n}</span>`:'');
+ const b=$('ms');if(b){b.hidden=false;b.innerHTML=html}
+ for(const sel of ['#bnav [data-n="msgs"]','#secbar [data-s="msgs"]']){
+  const el=document.querySelector(sel);if(!el)continue;
+  el.querySelectorAll('.badge').forEach(x=>x.remove());
+  if(n)el.insertAdjacentHTML('beforeend',`<span class="badge">${n>99?'99+':n}</span>`);
+ }
+}
 async function msgBadge(){
  if(!prof)return;
- const r=await sb.from('messages').select('id',{count:'exact',head:true}).eq('recipient_id',me.id).is('read_at',null);
- const n=r.count||0,b=$('ms');if(!b)return;
- b.hidden=false;b.innerHTML='💬'+(n?`<span class="badge">${n>99?'99+':n}</span>`:'');
+ try{const r=await sb.from('messages').select('id',{count:'exact',head:true}).eq('recipient_id',me.id).is('read_at',null);msgUnread=r.count||0}catch(_){}
+ applyMsgBadges();
 }
 function openMessages(){if(!prof)return;chatWith=null;$('msgpage').hidden=false;renderMsgPage()}
 function closeMessages(){$('msgpage').hidden=true;if(chatTimer){clearInterval(chatTimer);chatTimer=null}}
@@ -803,6 +869,21 @@ async function loadThreads(){
   if(!t.preview)t.preview='🔒 رسالة مشفرة';
  }
 }
+function unlockBox(){
+ return `<div class="card lockbox"><b>🔓 افتح الرسائل</b><div class="setnote">الرسائل مشفرة بمفتاح خاص بيك. عشان نفتحه اكتب رقمك السري — المفتاح بيتفك في جهازك بس ومش بيتبعت للسيرفر.</div><input type="password" id="unlockpw" dir="ltr" maxlength="40" placeholder="رقمك السري"><button class="btn" id="unlockgo" style="margin-top:10px;width:100%">فتح الرسائل</button><div id="unlockmsg"></div></div>`;
+}
+function wireUnlock(done){
+ const go=$('unlockgo');if(!go)return;
+ const run=async()=>{
+  const pw=$('unlockpw').value,m=$('unlockmsg');if(!pw)return m.innerHTML='<div class="setbad">اكتب رقمك السري</div>';
+  m.innerHTML='<div class="setnote">جاري الفتح…</div>';
+  let ok=false;try{ok=await unlockKeys(pw)}catch(e){}
+  if(!ok)return m.innerHTML='<div class="setbad">الرقم السري غلط</div>';
+  done();
+ };
+ go.onclick=run;
+ const i=$('unlockpw');if(i)i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();run()}});
+}
 async function renderMsgPage(){
  const list=$('msglist'),chat=$('chatbox'),back=$('msgback');
  if(chatWith){
@@ -813,24 +894,16 @@ async function renderMsgPage(){
  }
  if(chatTimer){clearInterval(chatTimer);chatTimer=null}
  chat.hidden=true;list.hidden=false;$('msgtitle').textContent='💬 الرسائل';back.textContent='✕ إغلاق';
- if(!myPriv){
-  list.innerHTML=`<div class="card lockbox"><b>🔓 افتح الرسائل</b><div class="setnote">الرسائل مشفرة بمفتاح خاص بيك. عشان نفتحه اكتب رقمك السري — المفتاح بيتفك في جهازك بس ومش بيتبعت للسيرفر.</div><input type="password" id="unlockpw" dir="ltr" maxlength="40" placeholder="رقمك السري"><button class="btn" id="unlockgo" style="margin-top:10px;width:100%">فتح الرسائل</button><div id="unlockmsg"></div></div>`;
-  $('unlockgo').onclick=async()=>{
-   const pw=$('unlockpw').value,m=$('unlockmsg');if(!pw)return m.innerHTML='<div class="setbad">اكتب رقمك السري</div>';
-   m.innerHTML='<div class="setnote">جاري الفتح…</div>';
-   let ok=false;try{ok=await unlockKeys(pw)}catch(e){}
-   if(!ok)return m.innerHTML='<div class="setbad">الرقم السري غلط</div>';
-   renderMsgPage();
-  };
-  return;
- }
+ if(!myPriv){list.innerHTML=unlockBox();wireUnlock(()=>renderMsgPage());return}
  list.innerHTML='<div class="empty">جاري التحميل…</div>';
  try{await loadThreads()}catch(e){list.innerHTML='<div class="empty">تعذر التحميل: '+esc(e.message)+'</div>';return}
  list.innerHTML=threads.length?threads.map(t=>`<div class="thread" data-chat="${t.id}"><div class="av">${esc((t.name||'?')[0])}</div><div class="tx"><b>${esc(t.name)}</b><small>${esc((t.last.sender_id===me.id?'انت: ':'')+t.preview)}</small></div>${t.unread?`<span class="un">${t.unread}</span>`:''}</div>`).join(''):'<div class="empty">مفيش رسائل لسه.<br>افتح حساب أي عضو واضغط «💬 رسالة».</div>';
 }
 async function renderChat(){
  const log=$('chatlog');if(!log)return;
- if(!myPriv){log.innerHTML='<div class="lockbox">🔓 افتح الرسائل الأول</div>';return}
+ const cf=$('chatfoot');
+ if(!myPriv){if(cf)cf.hidden=true;log.innerHTML=unlockBox();wireUnlock(()=>renderMsgPage());return}
+ if(cf)cf.hidden=false;
  const other=await getPub(chatWith);
  const r=await sb.from('messages').select('id,sender_id,recipient_id,cipher,iv,created_at,read_at').or('and(sender_id.eq.'+me.id+',recipient_id.eq.'+chatWith+'),and(sender_id.eq.'+chatWith+',recipient_id.eq.'+me.id+')').order('created_at',{ascending:true}).limit(300);
  if(r.error){log.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>';return}
